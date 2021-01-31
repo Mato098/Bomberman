@@ -1205,7 +1205,7 @@ platno.bind_all('<Button-1>', cisloDebug)
 # mainloop
 
 gamestate = 1
-strafecounter = 0
+strafecounter = 0  # player strafe movement
 while gamestate == 1:
 	if keyboard.is_pressed('a') and keyboard.is_pressed('w'):  # user input, najskor strafing
 		playerRotation = 'left'
@@ -1341,9 +1341,6 @@ while gamestate == 1:
 
 	if time.time() - ai1_anim_time > 0.01 - (ai1_stats.playerSpeed - 2) * 0.002:  # ai1 anim + movement
 		if ai1_stats.path != 'none':
-			#if ai1_stats.lastPath != ai1_stats.path:
-				#player_animSpeedRegulator = 10
-				#ai1_stats.lastPath = ai1_stats.path
 			ai_move(ai1, ai1_stats, ai1Sprites, ai1_anim_counter, 'ai1')
 			ai1_anim_time = time.time()
 		else:
@@ -1354,16 +1351,11 @@ while gamestate == 1:
 				for i in range(len(playersCoords)):
 					playersCoords[i][0] = math.floor(playersCoords[i][0] / 64)
 					playersCoords[i][1] = math.floor(playersCoords[i][1] / 64)
-			#	print(playersCoords)
-
 
 				aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai1)[1]) / 64)
 				                      , math.floor((platno.coords(ai1)[0]) / 64), ai1_stats, playersZoznam)
 				ai_output_handler(ai1_stats, ai1)
-				#ai1_stats.current_target_powerup_list = a.current_target_powerup_list
-				#print('main')
-				#print(a.current_target_powerup_list)
-				#print(ai1_stats.current_target_powerup_list)
+
 
 
 

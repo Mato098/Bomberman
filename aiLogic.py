@@ -18,7 +18,10 @@ rightScore = 0
 def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 
 	if dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci nieje v nebezpecenstve
-		dangerPathCalculator(obstaclesmatrix, positionX, positionY, positionX, positionY, stats)  # ide z tade het
+		print('danger')
+		pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'danger')  # ide z tade het
+		if stats.current_target_powerup_list != []:
+			move_podla_zoznamu(positionX, positionY, stats)
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
@@ -27,7 +30,7 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 
 		if stats.name == 'ai1':
 			if (stats.current_target_powerup_list == [None]) or (stats.current_target_powerup_list == []):  # ak nema ziaden ciel(powerup)
-				nearest_powerup_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats)  # tak si najde
+				pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'powerup')  # tak si najde
 			else:  # ak uz tam nejaka cesta je, t.j. ma ju nasledovat, nasleduje ju
 				move_podla_zoznamu(positionX, positionY, stats)
 
@@ -40,7 +43,7 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 	return stats
 
 
-def nearest_powerup_rekurzivne_master(obstaclesmatrix, aiX, aiY, stats):
+def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
 	global upScore, downScore, rightScore, leftScore
 	stats.path = 'none'
 	upScore = []
@@ -48,39 +51,35 @@ def nearest_powerup_rekurzivne_master(obstaclesmatrix, aiX, aiY, stats):
 	leftScore = []
 	rightScore = []
 
-	if obstaclesmatrix[aiY - 1][aiX].cislo == 2:  # hore
+	if obstaclesmatrix[aiY - 1][aiX].cislo == Policko.volne:  # hore
 		obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 		upScore = []
-		upScore = nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX, aiY - 1, stats, upScore)
-
+		upScore = pathfinder_slave(obstaclesmatrix, aiX, aiY - 1, stats, upScore, purpose)
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
 
 
-	if 	obstaclesmatrix[aiY + 1][aiX].cislo == 2:  # dole
+	if 	obstaclesmatrix[aiY + 1][aiX].cislo == Policko.volne:  # dole
 			obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 			downScore = []
-			downScore = nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX, aiY + 1, stats, downScore)
-
+			downScore = pathfinder_slave(obstaclesmatrix, aiX, aiY + 1, stats, downScore, purpose)
 			for i in range(13):
 				for e in range(15):
 					obstaclesmatrix[i][e].aiSeen = 'no'
 
-	if obstaclesmatrix[aiY][aiX + 1].cislo == 2:  # vpravo
+	if obstaclesmatrix[aiY][aiX + 1].cislo == Policko.volne:  # vpravo
 			obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 			rightScore = []
-			rightScore = nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX + 1, aiY, stats, rightScore)
-
+			rightScore = pathfinder_slave(obstaclesmatrix, aiX + 1, aiY, stats, rightScore, purpose)
 			for i in range(13):
 				for e in range(15):
 					obstaclesmatrix[i][e].aiSeen = 'no'
 
-	if obstaclesmatrix[aiY][aiX - 1].cislo == 2:  # vlavo
+	if obstaclesmatrix[aiY][aiX - 1].cislo == Policko.volne:  # vlavo
 			obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 			leftScore = []
-			leftScore = nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX - 1, aiY, stats, leftScore)
-
+			leftScore = pathfinder_slave(obstaclesmatrix, aiX - 1, aiY, stats, leftScore, purpose)
 			for i in range(13):
 				for e in range(15):
 					obstaclesmatrix[i][e].aiSeen = 'no'
@@ -97,10 +96,9 @@ def nearest_powerup_rekurzivne_master(obstaclesmatrix, aiX, aiY, stats):
 		toPop = []
 		for i in range(len(zoznam)):  # z [X,Y] zoznamu urobi h zoznam2    h=vzdusna vzdialenost
 			if (zoznam[i] != []) and (zoznam[i] != 0):
-				#print(zoznam[i])
 				zoznam2.append(math.sqrt((aiX + zoznam[i][0]) ** 2 + (aiY + zoznam[i][1]) ** 2))
 
-				zoznam[i] = A([aiX, aiY], zoznam[i], obstaclesmatrix)  # jednotlive X,Y ciele zmeni na A* output
+				zoznam[i] = A_star([aiX, aiY], zoznam[i], obstaclesmatrix)  # jednotlive X,Y ciele zmeni na A* output
 			else:
 				toPop.append(i)
 
@@ -110,16 +108,11 @@ def nearest_powerup_rekurzivne_master(obstaclesmatrix, aiX, aiY, stats):
 
 		najkratsiaCesta = min(zoznam2)  # da do {cesta} najkratsiu z 4 ciest co tam boli
 		cesta = zoznam[zoznam2.index(najkratsiaCesta)]
-		#print('cesta')
-		#print(cesta)
-
-		#cesta.reverse()
 
 		stats.current_target_powerup_list = cesta
 
 
-
-def nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX, aiY, stats, score):
+def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose):
 
 	if obstaclesmatrix[aiY][aiX].cislo == Policko.stena:
 		return []
@@ -131,8 +124,12 @@ def nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX, aiY, stats, score):
 		return []
 	if obstaclesmatrix[aiY][aiX].tileName == 'explosion':
 		return []
-	if obstaclesmatrix[aiY][aiX].powerup != '':
-		return [aiX, aiY]
+	if purpose == 'powerup':
+		if obstaclesmatrix[aiY][aiX].powerup != '':
+			return [aiX, aiY]
+	elif purpose == 'danger':
+		if dangerCalculator(obstaclesmatrix, aiX, aiY) == False:
+			return [aiX, aiY]
 
 	obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 
@@ -141,7 +138,7 @@ def nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX, aiY, stats, score):
 
 	for i in range(4):
 
-		if (score := nearest_powerup_rekurzivne_slave(obstaclesmatrix, aiX + seqX[i], aiY + seqY[i], stats, score)) != []:  # vpravo
+		if (score := pathfinder_slave(obstaclesmatrix, aiX + seqX[i], aiY + seqY[i], stats, score, purpose)) != []:  # vpravo
 			#print('score' + str(score))
 			#score += 1
 			return score
@@ -231,7 +228,7 @@ def dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci je v dosahu n
 	return False
 
 
-def dangerPathCalculator(obstaclesmatrix, positionX, positionY, aiX, aiY, stats):
+def danger_path_calculator_master(obstaclesmatrix, positionX, positionY, aiX, aiY, stats):
 	stats.path = 'none'
 	if obstaclesmatrix[positionY][positionX].cislo == Policko.stena:
 		return False
@@ -253,25 +250,25 @@ def dangerPathCalculator(obstaclesmatrix, positionX, positionY, aiX, aiY, stats)
 
 	obstaclesmatrix[positionY][positionX].aiSeen = 'yes'
 
-	if dangerPathCalculator(obstaclesmatrix, positionX + 1, positionY, aiX, aiY, stats):
+	if danger_path_calculator_master(obstaclesmatrix, positionX + 1, positionY, aiX, aiY, stats):
 		if stats.lastPath != 'left':  # aby sa nevybral opacnym smerom akym zacal chodit( -> sa zasekne medzi 2 blockmi)
 			stats.path = 'right'
 			print('righttt')
 			return True
 
-	elif dangerPathCalculator(obstaclesmatrix, positionX, positionY + 1, aiX, aiY, stats):
+	elif danger_path_calculator_master(obstaclesmatrix, positionX, positionY + 1, aiX, aiY, stats):
 		if stats.lastPath != 'up':
 			stats.path = 'down'
 			print('downnn')
 			return True
 
-	elif dangerPathCalculator(obstaclesmatrix, positionX - 1, positionY, aiX, aiY, stats):
+	elif danger_path_calculator_master(obstaclesmatrix, positionX - 1, positionY, aiX, aiY, stats):
 		if stats.lastPath != 'right':
 			stats.path = 'left'
 			print('lefttt')
 			return True
 
-	elif dangerPathCalculator(obstaclesmatrix, positionX, positionY - 1, aiX, aiY, stats):
+	elif danger_path_calculator_master(obstaclesmatrix, positionX, positionY - 1, aiX, aiY, stats):
 		if stats.lastPath != 'down':
 			stats.path = 'up'
 			print('upppp')
@@ -279,6 +276,10 @@ def dangerPathCalculator(obstaclesmatrix, positionX, positionY, aiX, aiY, stats)
 
 
 	return False
+
+
+def danger_path_calculator_slave(obstaclesmatrix, aiX, aiY, stats, score):
+	pass
 
 
 def A_get_h(start, goal):  # pocita heuristic distance = vzdialenost k cielu vzdusnou ciarou
@@ -290,7 +291,7 @@ def A_get_h(start, goal):  # pocita heuristic distance = vzdialenost k cielu vzd
 
 
 	# A* algoritmus
-def A(start, goal, matrix):  # start, goal = tuple - start[X, Y]
+def A_star(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 	open = []
 	closed = []
 					# [coords[x, y] of that square, g(vzdialenost prejdena od zaciatku),
@@ -362,12 +363,10 @@ def A(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 			for i in origo:
 				if i[0] == gut[len(gut) - 1][4]:  # toto nerobi to co ma
 					gut.append(i)
-		#
+
 		gut.reverse()
-		print('gut')
-		print(gut)
 		gut.pop(0)
-		print(gut)
+
 		return gut
 
 
@@ -379,9 +378,7 @@ def move_podla_zoznamu(aiX, aiY, stats):
 
 	stats.current_target_powerup_list.pop(0)
 
-	print('next step')
 	print(next_stepXY)
-	print('standing_onXY')
 	print(standing_onXY)
 
 	smer = [next_stepXY[0] - standing_onXY[0], next_stepXY[1] - standing_onXY[1]]
