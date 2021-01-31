@@ -1,5 +1,7 @@
 #! python3
 
+#  Mano was here
+
 import copy
 import tkinter, math, time, keyboard, random
 from dataclasses import dataclass, field
