@@ -21,7 +21,7 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 		print('danger')
 		pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'danger')  # ide z tade het
 		if stats.current_target_powerup_list != []:
-			move_podla_zoznamu(positionX, positionY, stats)
+			move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'danger')
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
@@ -32,7 +32,7 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 			if (stats.current_target_powerup_list == [None]) or (stats.current_target_powerup_list == []):  # ak nema ziaden ciel(powerup)
 				pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'powerup')  # tak si najde
 			else:  # ak uz tam nejaka cesta je, t.j. ma ju nasledovat, nasleduje ju
-				move_podla_zoznamu(positionX, positionY, stats)
+				move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
 
 		for i in range(13):
 			for e in range(15):
@@ -125,8 +125,11 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose):
 	if obstaclesmatrix[aiY][aiX].tileName == 'explosion':
 		return []
 	if purpose == 'powerup':
-		if obstaclesmatrix[aiY][aiX].powerup != '':
-			return [aiX, aiY]
+		if dangerCalculator(obstaclesmatrix, aiX, aiY) == False:
+			if obstaclesmatrix[aiY][aiX].powerup != '':
+				return [aiX, aiY]
+		else:
+			return []
 	elif purpose == 'danger':
 		if dangerCalculator(obstaclesmatrix, aiX, aiY) == False:
 			return [aiX, aiY]
@@ -228,60 +231,6 @@ def dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci je v dosahu n
 	return False
 
 
-def danger_path_calculator_master(obstaclesmatrix, positionX, positionY, aiX, aiY, stats):
-	stats.path = 'none'
-	if obstaclesmatrix[positionY][positionX].cislo == Policko.stena:
-		return False
-	if obstaclesmatrix[positionY][positionX].cislo == Policko.krabica:
-		return False
-	if (positionX == aiX) and (positionY == aiY):  # ak stoji na bombe
-		pass
-	else:
-		if obstaclesmatrix[positionY][positionX].cislo == Policko.bomba:
-			return False
-	if obstaclesmatrix[positionY][positionX].aiSeen == 'yes':
-		return False
-
-	if dangerCalculator(obstaclesmatrix, positionX, positionY) == False:
-		return True
-	elif (dangerCalculator(obstaclesmatrix, positionX, positionY) != False) and \
-			(dangerCalculator(obstaclesmatrix, positionX, positionY) != True):
-		print('nevratilo nic')
-
-	obstaclesmatrix[positionY][positionX].aiSeen = 'yes'
-
-	if danger_path_calculator_master(obstaclesmatrix, positionX + 1, positionY, aiX, aiY, stats):
-		if stats.lastPath != 'left':  # aby sa nevybral opacnym smerom akym zacal chodit( -> sa zasekne medzi 2 blockmi)
-			stats.path = 'right'
-			print('righttt')
-			return True
-
-	elif danger_path_calculator_master(obstaclesmatrix, positionX, positionY + 1, aiX, aiY, stats):
-		if stats.lastPath != 'up':
-			stats.path = 'down'
-			print('downnn')
-			return True
-
-	elif danger_path_calculator_master(obstaclesmatrix, positionX - 1, positionY, aiX, aiY, stats):
-		if stats.lastPath != 'right':
-			stats.path = 'left'
-			print('lefttt')
-			return True
-
-	elif danger_path_calculator_master(obstaclesmatrix, positionX, positionY - 1, aiX, aiY, stats):
-		if stats.lastPath != 'down':
-			stats.path = 'up'
-			print('upppp')
-			return True
-
-
-	return False
-
-
-def danger_path_calculator_slave(obstaclesmatrix, aiX, aiY, stats, score):
-	pass
-
-
 def A_get_h(start, goal):  # pocita heuristic distance = vzdialenost k cielu vzdusnou ciarou
 
 	a = abs(goal[0] - start[0])
@@ -370,7 +319,7 @@ def A_star(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 		return gut
 
 
-def move_podla_zoznamu(aiX, aiY, stats):
+def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	zoznam = stats.current_target_powerup_list
 
 	standing_onXY = zoznam[0][4]
@@ -378,26 +327,28 @@ def move_podla_zoznamu(aiX, aiY, stats):
 
 	stats.current_target_powerup_list.pop(0)
 
-	print(next_stepXY)
-	print(standing_onXY)
-
 	smer = [next_stepXY[0] - standing_onXY[0], next_stepXY[1] - standing_onXY[1]]
-	print(smer)
 
-	if smer == [0, -1]:
-		stats.path = 'up'
-	elif smer == [0, 1]:
-		stats.path = 'down'
-	elif smer == [1, 0]:
-		stats.path = 'right'
-	elif smer == [-1, 0]:
-		stats.path = 'left'
+	if(dangerCalculator(obstaclesmatrix, next_stepXY[0], next_stepXY[1]) == False) or(purpose == 'danger'):
+		if smer == [0, -1]:
+			stats.path = 'up'
+		elif smer == [0, 1]:
+			stats.path = 'down'
+		elif smer == [1, 0]:
+			stats.path = 'right'
+		elif smer == [-1, 0]:
+			stats.path = 'left'
+		else:
+			print('neni dobry smer tunak')
+			stats.path = 'none'
+			stats.current_target_powerup_list = []
+			stats.current_listXY = []
+		print(stats.path)
 	else:
-		print('neni dobry smer tunak')
-		stats.path = 'none'
+		print('wont go there - danger')
 		stats.current_target_powerup_list = []
 		stats.current_listXY = []
-	print(stats.path)
+
 
 
 
