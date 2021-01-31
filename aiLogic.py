@@ -26,10 +26,6 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 		nearest_target_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats)  # dorobit
 
 		if stats.name == 'ai1':
-			print('a')
-			print(stats.current_target_powerup_list)
-
-
 			if (stats.current_target_powerup_list == [None]) or (stats.current_target_powerup_list == []):  # ak nema ziaden ciel(powerup)
 				nearest_powerup_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats)  # tak si najde
 			else:  # ak uz tam nejaka cesta je, t.j. ma ju nasledovat, nasleduje ju
@@ -366,11 +362,11 @@ def A(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 			for i in origo:
 				if i[0] == gut[len(gut) - 1][4]:  # toto nerobi to co ma
 					gut.append(i)
-		#gut.pop(0)
+		#
 		gut.reverse()
 		print('gut')
 		print(gut)
-
+		gut.pop(0)
 		print(gut)
 		return gut
 
@@ -378,14 +374,8 @@ def A(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 def move_podla_zoznamu(aiX, aiY, stats):
 	zoznam = stats.current_target_powerup_list
 
-	standing_onXY = zoznam[0][0]
-
-	if len(zoznam) == 1:
-		pass
-		next_stepXY = zoznam[0][0]
-		standing_onXY = zoznam[0][4]
-	else:
-		next_stepXY = zoznam[1][0]
+	standing_onXY = zoznam[0][4]
+	next_stepXY = zoznam[0][0]
 
 	stats.current_target_powerup_list.pop(0)
 
