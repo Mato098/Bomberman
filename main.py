@@ -1181,7 +1181,7 @@ for i in range(13):  # kreslenie podlahy, krabic, power-up-ov, stavanie hracej p
 				chosen = random.choices(
 				[['amountUpImg', amountUpImg], ['amountDownImg', amountDownImg], ['amountFullImg', amountFullImg],
 				 ['rangeUpImg', rangeUpImg], ['rangeDownImg', rangeDownImg], ['rangeFullImg', rangeFullImg], ['speedUpImg', speedUpImg],
-				 ['speedDownImg', speedDownImg], ['piercingImg', piercingImg], ['vestImg', vestImg]], weights=(16, 4, 3, 15, 4, 2, 15, 4, 3, 3), k=1)
+				 ['speedDownImg', speedDownImg], ['piercingImg', piercingImg], ['vestImg', vestImg]], weights=(15, 4, 3, 14, 4, 2, 14, 4, 3, 3), k=1)
 
 				obstaclesMatrix[i][e].powerup = chosen[0][0]
 				obstaclesMatrix[i][e].powerupObj = chosen[0][1]
