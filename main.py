@@ -4,6 +4,7 @@ import copy
 import tkinter, math, time, keyboard, random
 from dataclasses import dataclass, field
 
+# to install PIL, install package 'pillow' instead
 from PIL import Image, ImageTk
 from enum import IntEnum
 from typing import List  # aby som mohol mat v dataclasse zoznam
@@ -167,10 +168,10 @@ class ai1_stats:
 
 	moving = False
 	vestStartTime: float = 0
-	# current_target_powerupXY: List[None] = field(default_factory=list)
 	startX: int = 0  # zaciatok pohybu o 1 policko
 	startY: int = 0
 	movingDirection: str = 'up'
+	bombPlaced: int = 0
 	bombAmount: int = 1
 	bombRange: int = 0
 	path: str = 'none'
@@ -180,6 +181,7 @@ class ai1_stats:
 	vest: str = 'no'
 	piercing: str = 'no'
 	name: str = 'ai1'
+	coords: List[str] = field(default_factory=list)
 
 	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
 	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
@@ -189,14 +191,17 @@ ai1_stats = a
 
 @dataclass
 class PlayerPowerups:
-	vestStartTime: float
+	vestStartTime: float = 0
 	bombAmount: int = 3
 	bombRange: int = 2
 	bombRangeFull: str = 'no'
 	playerSpeed: int = 2
 	vest: str = 'no'
 	piercing: str = 'no'
-
+	coords: List[str] = field(default_factory=list)
+	name: str = 'player1'
+a = PlayerPowerups()
+PlayerPowerups = a
 
 def createClass():
 	@dataclass
@@ -204,6 +209,7 @@ def createClass():
 
 		obj: []  # tkinter objekt
 		powerupObj: []
+		bombParent: str
 		bombRange: int  # bomb info
 		bombRangeFull: str = 'no'  # bomb info
 		rotation: str = 'up'  # exp rotation
@@ -277,6 +283,7 @@ def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je 
 			obstaclesMatrix[y][x].cislo = Policko.bomba
 			obstaclesMatrix[y][x].bombRange = PlayerPowerups.bombRange
 			obstaclesMatrix[y][x].bombRangeFull = PlayerPowerups.bombRangeFull
+			obstaclesMatrix[y][x].bombParent = 'player1'
 			platno.tag_raise(player)
 			playerPlacedBombs += 1
 			bombTimerBomb.append(bomba)
@@ -309,18 +316,42 @@ def checkBombs():
 			if bombTimerTime[f] != 0:
 				if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
 									[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombRangeFull == 'yes'):  # full ma full classic bez aj s piercingom
+
+					if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
+					[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'player1'):
+						playerPlacedBombs += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
+						ai1_stats.bombPlaced += -1
+
 					explosionFull_only_or_also_Piercing(bombTimerBomb[f])
 				elif (obstaclesMatrix[math.floor(platno.coords(bombTimerBomb[f])[1] / 64)]
 									[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].piercingBomb == 'yes'):  # piercing classic
+
+					if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
+					[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'player1'):
+						playerPlacedBombs += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
+						ai1_stats.bombPlaced += -1
+
 					explosionPiercing_only(bombTimerBomb[f])
 				else:  # classic
+
+					if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
+					[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'player1'):
+						playerPlacedBombs += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
+						ai1_stats.bombPlaced += -1
+
 					explosionClassic(bombTimerBomb[f])
+
+
 
 				platno.delete(bombTimerBomb[f])
 				platno.update()
 				bombTimerTime[f] = 0
-				playerPlacedBombs += -1
-
 
 def expPlacementJudge(y, x, baseTileExp): ###
 	global obstaclesMatrix
@@ -1098,6 +1129,10 @@ def cisloDebug(event):
 	print(obstaclesMatrix[y][x].bolTuCrate)
 
 
+def update_stats_coords(stats, Obj):
+	stats.coords = [math.floor((platno.coords(Obj)[1]) / 64), math.floor((platno.coords(Obj)[0]) / 64)]
+
+
 obstaclesMatrix = [  # 1 = obstacle, 0 = crate, 2 = free, 3 = bomba
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # walls
 	[1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1],  # free
@@ -1167,10 +1202,8 @@ player = platno.create_image(150, 80, image=playerSprites[0])
 ai1 = platno.create_image(14 * 64 - 32, 80, image=ai1Img)
 
 playersZoznam = []
-playersZoznam.append(player)
-playersZoznam.append(ai1)
-
-
+playersZoznam.append([player, PlayerPowerups])
+playersZoznam.append([ai1, ai1_stats])
 
 
 platno.update()
@@ -1344,13 +1377,16 @@ while gamestate == 1:
 			ai_move(ai1, ai1_stats, ai1Sprites, ai1_anim_counter, 'ai1')
 			ai1_anim_time = time.time()
 		else:
-			if ai1_stats.moving == False:
-				playersCoords = []
-				for i in playersZoznam:
-					playersCoords.append(platno.coords(i))
-				for i in range(len(playersCoords)):
-					playersCoords[i][0] = math.floor(playersCoords[i][0] / 64)
-					playersCoords[i][1] = math.floor(playersCoords[i][1] / 64)
+			#if ai1_stats.moving == False:
+			#	playersCoords = []
+			#	for i in playersZoznam:
+			#		playersCoords.append(platno.coords(i))
+			#	for i in range(len(playersCoords)):
+			#		playersCoords[i][0] = math.floor(playersCoords[i][0] / 64)
+			#		playersCoords[i][1] = math.floor(playersCoords[i][1] / 64)
+
+				update_stats_coords(ai1_stats, ai1)
+				update_stats_coords(PlayerPowerups, player)
 
 				aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai1)[1]) / 64)
 				                      , math.floor((platno.coords(ai1)[0]) / 64), ai1_stats, playersZoznam)

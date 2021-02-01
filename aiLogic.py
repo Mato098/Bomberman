@@ -18,7 +18,6 @@ rightScore = 0
 def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 
 	if dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci nieje v nebezpecenstve
-		print('danger')
 		pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'danger')  # ide z tade het
 		if stats.current_target_powerup_list != []:
 			move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'danger')
@@ -26,17 +25,18 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
 	else:
-		nearest_target_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats)  # dorobit
+		#nearest_target_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats)  # dorobit
 
 		if stats.name == 'ai1':
 			if (stats.current_target_powerup_list == [None]) or (stats.current_target_powerup_list == []):  # ak nema ziaden ciel(powerup)
 				pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'powerup')  # tak si najde
 			else:  # ak uz tam nejaka cesta je, t.j. ma ju nasledovat, nasleduje ju
 				move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
-
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
+		check_for_targets(obstaclesmatrix, positionX, positionY, stats, playersZoznam)
+
 
 
 
@@ -149,8 +149,109 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose):
 	return score
 
 
-def nearest_target_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats):
+def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
+	for i in playersZoznam:
+		targetX = i[1].coords[1]
+		targetY = i[1].coords[0]
+
+		placing = False  # ci na konci polozi bombu alebo ne
+
+		if (targetX == aiX) and (targetY == aiY):  # aby nepocital s tym ze on sam je oponent(aj ked dakto stoji na nom
+			# ta nebude davat... ale to by sa nemalo stat, keby hej, ta nevadi?)
+			break
+
+		if targetY == aiY:  # checkne vodorovne
+			if stats.bombRangeFull == 'no':
+				if abs(targetX - aiX) <= (stats.bombRange + 1):  # ak vie bomba zasiahnut niekoho:
+					if stats.piercing == 'no':  # ak neni piercing, pozre ci je medzi nimi krabica
+						if abs(targetX - aiX) >= 1:  # hmmmm?
+							if aiX > targetX:  # ak je AI napravo od ciela
+								for k in range(aiX - targetX):
+									if obstaclesmatrix[targetY][targetX + k].cislo == Policko.krabica:  # ak je medzi nimi krabica
+										placing = False
+										break
+									else:
+										placing = True
+
+							if aiX < targetX:  # ak je AI nalavo od ciela
+								for k in range(targetX - aiX):
+									if obstaclesmatrix[targetY][targetX - k].cislo == Policko.krabica:
+										placing = False
+										break
+									else:
+										placing = True
+					else:  # piercing bomba klasicka
+						placing = True
+			else:  # full bomba bez, aj s piercingom
+				if stats.piercing == 'no':  # pozre ci je medzi nimi krabica
+					if aiX > targetX:
+						for k in range(aiX - targetX):
+							if obstaclesmatrix[targetY][targetX + k].cislo == Policko.krabica:
+								placing = False
+								break
+							else:
+								placing = True
+					if aiX < targetX:
+						for k in range(targetX - aiX):
+							if obstaclesmatrix[targetY][targetX - k].cislo == Policko.krabica:
+								placing = False
+								break
+							else:
+								placing = True
+			if placing:
+				print('AI places a bomb')
+				ai_place_bomb(obstaclesmatrix, aiX, aiY, stats)
+				return
+
+		elif targetX == aiX:  # horizontalne checkuje
+			if stats.bombRangeFull == 'no':
+				if abs(targetY - aiY) <= (stats.bombRange + 1):  # ak vie bomba zasiahnut niekoho:
+					if stats.piercing == 'no':  # ak neni piercing, pozre ci je medzi nimi krabica
+						if abs(targetY - aiY) >= 1:  # hmmmm?
+							if aiY > targetY:  # ak je AI pod cielom
+								for k in range(aiY - targetY):
+									if obstaclesmatrix[targetY - k][
+										targetX].cislo == Policko.krabica:  # ak je medzi nimi krabica
+										placing = False
+										break
+									else:
+										placing = True
+
+							if aiY < targetY:  # ak je AI nad cielom
+								for k in range(targetY - aiY):
+									if obstaclesmatrix[targetY + k][targetX].cislo == Policko.krabica:
+										placing = False
+										break
+									else:
+										placing = True
+					else:  # piercing bomba klasicka
+						placing = True
+			else:  # full bomba bez, aj s piercingom
+				if stats.piercing == 'no':  # pozre ci je medzi nimi krabica
+					if aiY > targetY:  # ai je pod cielom
+						for k in range(aiY - targetY):
+							if obstaclesmatrix[targetY - k][targetX].cislo == Policko.krabica:
+								placing = False
+								break
+							else:
+								placing = True
+					if aiY < targetY:  # ak je ai nad cielom
+						for k in range(targetY - aiY):
+							if obstaclesmatrix[targetY + k][targetX].cislo == Policko.krabica:
+								placing = False
+								break
+							else:
+								placing = True
+			if placing:
+				print('AI places a bomb')
+				ai_place_bomb(obstaclesmatrix, aiX, aiY, stats)
+				return
+
+
+def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
 	pass
+
+
 
 
 def target_destructable_path_calculator(obstaclesmatrix, positionX, positionY, targetX, targetY):
@@ -161,7 +262,6 @@ def dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci je v dosahu n
 
 	for i in range(len(obstaclesmatrix[positionY])):  # vodorovne pozera na nebezpecenstvo
 		if obstaclesmatrix[positionY][i].cislo == Policko.bomba:
-			#print(obstaclesmatrix[positionY][i].bombRange)
 			if obstaclesmatrix[positionY][i].bombRangeFull == 'no':
 				for j in range(1, obstaclesmatrix[positionY][i].bombRange + 2):
 					if (positionX == i) or (positionX == i - j) or (positionX == i + j):  # ak vie bomba ho zasiahnut
