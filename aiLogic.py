@@ -257,11 +257,7 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 
 
 def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
-	print(stats.bombPlaced)
-	print(stats.bombAmount)
-
 	if stats.bombAmount > stats.bombPlaced:
-		print('a')
 		if obstaclesmatrix[aiY][aiX].cislo != Policko.bomba:
 			stats.placeBomb = True
 
@@ -371,7 +367,7 @@ def A_star(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 				node_current = i
 
 		if node_current[0] == goal:  # ak je dane policko cielom
-			print('mam ciel')
+			#print('mam ciel')
 			closed.append(node_current)
 			break
 
@@ -442,6 +438,13 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	stats.current_target_powerup_list.pop(0)
 
 	smer = [next_stepXY[0] - standing_onXY[0], next_stepXY[1] - standing_onXY[1]]
+
+	if obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.bomba:
+		print('le bomba')
+		stats.path = 'none'
+		stats.current_target_powerup_list = []
+		stats.current_listXY = []
+		return
 
 	if(dangerCalculator(obstaclesmatrix, next_stepXY[0], next_stepXY[1]) == False) or(purpose == 'danger'):
 		if smer == [0, -1]:

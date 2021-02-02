@@ -30,7 +30,7 @@ wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
 wallImg = ImageTk.PhotoImage(wallImg)
 
 player1color = 'color1'
-player2color = 'color2'
+player2color = 'color4'
 player3color = 'color3'
 player4color = 'color4'
 
@@ -981,7 +981,7 @@ def ai_move(aiObj, stats, sprites, animcounter, aiName):
 
 			stats.path = 'none'
 
-			print('presiel 1 block')
+			#print('presiel 1 block')
 			print(math.floor((platno.coords(ai1)[0]) / 64), math.floor((platno.coords(ai1)[1]) / 64))
 
 		else:
