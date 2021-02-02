@@ -171,8 +171,9 @@ class ai1_stats:
 	startX: int = 0  # zaciatok pohybu o 1 policko
 	startY: int = 0
 	movingDirection: str = 'up'
-	bombPlaced: int = 0
-	bombAmount: int = 1
+	placeBomb = False  # ci ma polozit bombu
+	bombPlaced: int = 0  # pocet uz polozenych bomb
+	bombAmount: int = 1  # max pocet polozenych bomb
 	bombRange: int = 0
 	path: str = 'none'
 	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
@@ -352,6 +353,7 @@ def checkBombs():
 				platno.delete(bombTimerBomb[f])
 				platno.update()
 				bombTimerTime[f] = 0
+
 
 def expPlacementJudge(y, x, baseTileExp): ###
 	global obstaclesMatrix
@@ -943,10 +945,27 @@ def powerup(name, obj):
 		PlayerPowerups.piercing = 'yes'
 
 
-def ai_output_handler(stats, aiObj):
-	if stats.path != 'none':
-		#stats.moving = True
-		pass
+def ai_place_bomb(stats, aiObj):
+	if stats.placeBomb == True:
+		stats.placeBomb = False
+		aiX = stats.coords[1]
+		aiY = stats.coords[0]
+		bomba = platno.create_image(aiX * 64 + 32, aiY * 64 + 32, image=bombSprites[0])
+		obstaclesMatrix[aiY][aiX].obj = bomba
+		obstaclesMatrix[aiY][aiX].cislo = Policko.bomba
+		obstaclesMatrix[aiY][aiX].bombRange = stats.bombRange
+		obstaclesMatrix[aiY][aiX].bombRangeFull = stats.bombRangeFull
+		obstaclesMatrix[aiY][aiX].bombParent = 'ai1'
+		platno.tag_raise(aiObj)
+		stats.bombPlaced += 1
+		bombTimerBomb.append(bomba)
+		bombTimerTime.append(time.time())
+
+		if stats.piercing == 'yes':
+			obstaclesMatrix[aiY][aiX].piercingBomb = 'yes'
+
+		unwalkableBomb.append(aiX)
+		unwalkableBomb.append(aiY)
 
 
 def ai_move(aiObj, stats, sprites, animcounter, aiName):
@@ -1390,7 +1409,7 @@ while gamestate == 1:
 
 				aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai1)[1]) / 64)
 				                      , math.floor((platno.coords(ai1)[0]) / 64), ai1_stats, playersZoznam)
-				ai_output_handler(ai1_stats, ai1)
+				ai_place_bomb(ai1_stats, ai1)
 
 
 

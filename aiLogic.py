@@ -167,7 +167,8 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 						if abs(targetX - aiX) >= 1:  # hmmmm?
 							if aiX > targetX:  # ak je AI napravo od ciela
 								for k in range(aiX - targetX):
-									if obstaclesmatrix[targetY][targetX + k].cislo == Policko.krabica:  # ak je medzi nimi krabica
+									if (obstaclesmatrix[targetY][targetX + k].cislo == Policko.krabica) or\
+										(obstaclesmatrix[targetY][targetX + k].cislo == Policko.stena):  # ak je medzi nimi krabica
 										placing = False
 										break
 									else:
@@ -175,7 +176,8 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 
 							if aiX < targetX:  # ak je AI nalavo od ciela
 								for k in range(targetX - aiX):
-									if obstaclesmatrix[targetY][targetX - k].cislo == Policko.krabica:
+									if (obstaclesmatrix[targetY][targetX - k].cislo == Policko.krabica) or\
+										(obstaclesmatrix[targetY][targetX - k].cislo == Policko.stena):
 										placing = False
 										break
 									else:
@@ -186,14 +188,16 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 				if stats.piercing == 'no':  # pozre ci je medzi nimi krabica
 					if aiX > targetX:
 						for k in range(aiX - targetX):
-							if obstaclesmatrix[targetY][targetX + k].cislo == Policko.krabica:
+							if (obstaclesmatrix[targetY][targetX + k].cislo == Policko.krabica) or\
+								(obstaclesmatrix[targetY][targetX + k].cislo == Policko.stena):
 								placing = False
 								break
 							else:
 								placing = True
 					if aiX < targetX:
 						for k in range(targetX - aiX):
-							if obstaclesmatrix[targetY][targetX - k].cislo == Policko.krabica:
+							if (obstaclesmatrix[targetY][targetX - k].cislo == Policko.krabica) or \
+								(obstaclesmatrix[targetY][targetX - k].cislo == Policko.stena):
 								placing = False
 								break
 							else:
@@ -210,8 +214,8 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 						if abs(targetY - aiY) >= 1:  # hmmmm?
 							if aiY > targetY:  # ak je AI pod cielom
 								for k in range(aiY - targetY):
-									if obstaclesmatrix[targetY - k][
-										targetX].cislo == Policko.krabica:  # ak je medzi nimi krabica
+									if (obstaclesmatrix[targetY - k][targetX].cislo == Policko.krabica) or \
+									(obstaclesmatrix[targetY - k][targetX].cislo == Policko.stena):  # ak je medzi nimi krabica
 										placing = False
 										break
 									else:
@@ -219,7 +223,8 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 
 							if aiY < targetY:  # ak je AI nad cielom
 								for k in range(targetY - aiY):
-									if obstaclesmatrix[targetY + k][targetX].cislo == Policko.krabica:
+									if (obstaclesmatrix[targetY + k][targetX].cislo == Policko.krabica) or \
+										(obstaclesmatrix[targetY + k][targetX].cislo == Policko.stena):
 										placing = False
 										break
 									else:
@@ -230,14 +235,17 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 				if stats.piercing == 'no':  # pozre ci je medzi nimi krabica
 					if aiY > targetY:  # ai je pod cielom
 						for k in range(aiY - targetY):
-							if obstaclesmatrix[targetY - k][targetX].cislo == Policko.krabica:
+							if (obstaclesmatrix[targetY - k][targetX].cislo == Policko.krabica) or\
+								(obstaclesmatrix[targetY - k][targetX].cislo == Policko.stena):
+
 								placing = False
 								break
 							else:
 								placing = True
 					if aiY < targetY:  # ak je ai nad cielom
 						for k in range(targetY - aiY):
-							if obstaclesmatrix[targetY + k][targetX].cislo == Policko.krabica:
+							if (obstaclesmatrix[targetY + k][targetX].cislo == Policko.krabica)\
+									or obstaclesmatrix[targetY + k][targetX].cislo == Policko.stena:
 								placing = False
 								break
 							else:
@@ -249,7 +257,13 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 
 
 def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
-	pass
+	print(stats.bombPlaced)
+	print(stats.bombAmount)
+
+	if stats.bombAmount > stats.bombPlaced:
+		print('a')
+		if obstaclesmatrix[aiY][aiX].cislo != Policko.bomba:
+			stats.placeBomb = True
 
 
 
