@@ -355,7 +355,7 @@ def checkBombs():
 				bombTimerTime[f] = 0
 
 
-def expPlacementJudge(y, x, baseTileExp): ###
+def expPlacementJudge(y, x, baseTileExp):
 	global obstaclesMatrix
 	if (x > 13) or (x < 0):
 		return False
@@ -1343,7 +1343,7 @@ while gamestate == 1:
 	if keyboard.is_pressed('Escape'):
 		exit()
 
-	if playerPlacedBombs != 0:
+	if (playerPlacedBombs != 0) or (ai1_stats.bombPlaced):
 		if time.time() - tBombs > 0.1:  # bomb anim speed regulator
 			animBombs()
 			tBombs = time.time()
