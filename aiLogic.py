@@ -471,13 +471,18 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 		stats.current_listXY = []
 		return
 
-	if obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.krabica:
+	if (obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.krabica) and (purpose == 'player_wall'):
 		ai_place_bomb(obstaclesmatrix, aiX, aiY, stats)
 		stats.path = 'none'
 		stats.current_target_powerup_list = []
 		stats.current_listXY = []
-		
-		return []
+		return
+
+	if (obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].tileName == 'explosion'):
+		stats.path = 'none'
+		stats.current_target_powerup_list = []
+		stats.current_listXY = []
+		return
 
 	if(dangerCalculator(obstaclesmatrix, next_stepXY[0], next_stepXY[1]) == False) or (purpose == 'danger'):
 		if smer == [0, -1]:
