@@ -39,9 +39,15 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 		if stats.current_target_powerup_list == []:
 			pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'player_search', playersZoznam)
 			stats.job = 'player'
-		else:
-			if stats.job == 'player':
+		elif stats.job == 'player':
+
 				move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
+
+		if stats.current_target_powerup_list == []:
+			pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'player_wall_search', playersZoznam)
+			stats.job = 'player_wall'
+		elif stats.job == 'player_wall':
+			move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'player_wall')
 
 		check_for_targets(obstaclesmatrix, positionX, positionY, stats, playersZoznam)
 
@@ -107,7 +113,7 @@ def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose, playersZoznam):
 			if (zoznam[i] != []) and (zoznam[i] != 0):
 				zoznam2.append(math.sqrt((aiX + zoznam[i][0]) ** 2 + (aiY + zoznam[i][1]) ** 2))
 
-				zoznam[i] = A_star([aiX, aiY], zoznam[i], obstaclesmatrix)  # jednotlive X,Y ciele zmeni na A* output
+				zoznam[i] = A_star([aiX, aiY], zoznam[i], obstaclesmatrix, purpose)  # jednotlive X,Y ciele zmeni na A* output
 			else:
 				toPop.append(i)
 
@@ -125,8 +131,12 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose, playersZo
 
 	if obstaclesmatrix[aiY][aiX].cislo == Policko.stena:
 		return []
+
 	if obstaclesmatrix[aiY][aiX].cislo == Policko.krabica:
-		return []
+		if purpose == 'player_wall_search':
+			return [aiX, aiY]
+		else:
+			return []
 	if obstaclesmatrix[aiY][aiX].cislo == Policko.bomba:
 		return []
 	if obstaclesmatrix[aiY][aiX].aiSeen == 'yes':
@@ -147,7 +157,6 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose, playersZo
 			if i % 2 == 0:
 				if (playersZoznam[i][1].coords[1] == aiX) and (playersZoznam[i][1].coords[0] == aiY):
 					return [aiX, aiY]
-
 
 
 	obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
@@ -278,8 +287,6 @@ def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
 			stats.placeBomb = True
 
 
-
-
 def target_destructable_path_calculator(obstaclesmatrix, positionX, positionY, targetX, targetY):
 	pass
 
@@ -366,7 +373,7 @@ def A_get_h(start, goal):  # pocita heuristic distance = vzdialenost k cielu vzd
 
 
 	# A* algoritmus
-def A_star(start, goal, matrix):  # start, goal = tuple - start[X, Y]
+def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 	open = []
 	closed = []
 					# [coords[x, y] of that square, g(vzdialenost prejdena od zaciatku),
@@ -414,7 +421,8 @@ def A_star(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 			if oo == 0:  # add to open
 				#print(succ_coords)
 
-				if matrix[succ_coords[1]][succ_coords[0]].cislo == Policko.volne:
+				if (matrix[succ_coords[1]][succ_coords[0]].cislo == Policko.volne) or \
+						((matrix[succ_coords[1]][succ_coords[0]].cislo == Policko.krabica) and (purpose == 'player_wall_search')):
 					open.append([succ_coords, succ_cost, A_get_h(succ_coords, goal),
 									succ_cost + A_get_h(succ_coords, goal), node_current[0]])
 
@@ -447,6 +455,7 @@ def A_star(start, goal, matrix):  # start, goal = tuple - start[X, Y]
 
 def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	zoznam = stats.current_target_powerup_list
+	print(zoznam)
 
 	standing_onXY = zoznam[0][4]
 	next_stepXY = zoznam[0][0]
@@ -461,6 +470,14 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 		stats.current_target_powerup_list = []
 		stats.current_listXY = []
 		return
+
+	if obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.krabica:
+		ai_place_bomb(obstaclesmatrix, aiX, aiY, stats)
+		stats.path = 'none'
+		stats.current_target_powerup_list = []
+		stats.current_listXY = []
+		
+		return []
 
 	if(dangerCalculator(obstaclesmatrix, next_stepXY[0], next_stepXY[1]) == False) or (purpose == 'danger'):
 		if smer == [0, -1]:
