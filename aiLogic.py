@@ -18,24 +18,33 @@ rightScore = 0
 def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 
 	if dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci nieje v nebezpecenstve
-		pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'danger')  # ide z tade het
+		pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'danger', playersZoznam)  # ide z tade het
 		if stats.current_target_powerup_list != []:
 			move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'danger')
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
 	else:
-		#nearest_target_rekurzivne_master(obstaclesmatrix, positionX, positionY, stats)  # dorobit
-
 		if stats.name == 'ai1':
 			if (stats.current_target_powerup_list == [None]) or (stats.current_target_powerup_list == []):  # ak nema ziaden ciel(powerup)
-				pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'powerup')  # tak si najde
+				pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'powerup', playersZoznam)  # tak si najde
+				stats.job = 'powerup'
 			else:  # ak uz tam nejaka cesta je, t.j. ma ju nasledovat, nasleduje ju
-				move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
+				if stats.job == 'powerup':
+					move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
+
+		if stats.current_target_powerup_list == []:
+			pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'player_search', playersZoznam)
+			stats.job = 'player'
+		else:
+			if stats.job == 'player':
+				move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
+
 		check_for_targets(obstaclesmatrix, positionX, positionY, stats, playersZoznam)
+
 
 
 
@@ -43,7 +52,7 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 	return stats
 
 
-def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
+def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose, playersZoznam):
 	global upScore, downScore, rightScore, leftScore
 	stats.path = 'none'
 	upScore = []
@@ -54,7 +63,7 @@ def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
 	if obstaclesmatrix[aiY - 1][aiX].cislo == Policko.volne:  # hore
 		obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 		upScore = []
-		upScore = pathfinder_slave(obstaclesmatrix, aiX, aiY - 1, stats, upScore, purpose)
+		upScore = pathfinder_slave(obstaclesmatrix, aiX, aiY - 1, stats, upScore, purpose, playersZoznam)
 		for i in range(13):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
@@ -63,7 +72,7 @@ def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
 	if 	obstaclesmatrix[aiY + 1][aiX].cislo == Policko.volne:  # dole
 			obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 			downScore = []
-			downScore = pathfinder_slave(obstaclesmatrix, aiX, aiY + 1, stats, downScore, purpose)
+			downScore = pathfinder_slave(obstaclesmatrix, aiX, aiY + 1, stats, downScore, purpose, playersZoznam)
 			for i in range(13):
 				for e in range(15):
 					obstaclesmatrix[i][e].aiSeen = 'no'
@@ -71,7 +80,7 @@ def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
 	if obstaclesmatrix[aiY][aiX + 1].cislo == Policko.volne:  # vpravo
 			obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 			rightScore = []
-			rightScore = pathfinder_slave(obstaclesmatrix, aiX + 1, aiY, stats, rightScore, purpose)
+			rightScore = pathfinder_slave(obstaclesmatrix, aiX + 1, aiY, stats, rightScore, purpose, playersZoznam)
 			for i in range(13):
 				for e in range(15):
 					obstaclesmatrix[i][e].aiSeen = 'no'
@@ -79,7 +88,7 @@ def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
 	if obstaclesmatrix[aiY][aiX - 1].cislo == Policko.volne:  # vlavo
 			obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 			leftScore = []
-			leftScore = pathfinder_slave(obstaclesmatrix, aiX - 1, aiY, stats, leftScore, purpose)
+			leftScore = pathfinder_slave(obstaclesmatrix, aiX - 1, aiY, stats, leftScore, purpose, playersZoznam)
 			for i in range(13):
 				for e in range(15):
 					obstaclesmatrix[i][e].aiSeen = 'no'
@@ -112,7 +121,7 @@ def pathfinder_master(obstaclesmatrix, aiX, aiY, stats, purpose):
 		stats.current_target_powerup_list = cesta
 
 
-def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose):
+def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose, playersZoznam):
 
 	if obstaclesmatrix[aiY][aiX].cislo == Policko.stena:
 		return []
@@ -133,6 +142,13 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose):
 	elif purpose == 'danger':
 		if dangerCalculator(obstaclesmatrix, aiX, aiY) == False:
 			return [aiX, aiY]
+	elif purpose == 'player_search':
+		for i in range(len(playersZoznam)):
+			if i % 2 == 0:
+				if (playersZoznam[i][1].coords[1] == aiX) and (playersZoznam[i][1].coords[0] == aiY):
+					return [aiX, aiY]
+
+
 
 	obstaclesmatrix[aiY][aiX].aiSeen = 'yes'
 
@@ -141,7 +157,7 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose):
 
 	for i in range(4):
 
-		if (score := pathfinder_slave(obstaclesmatrix, aiX + seqX[i], aiY + seqY[i], stats, score, purpose)) != []:  # vpravo
+		if (score := pathfinder_slave(obstaclesmatrix, aiX + seqX[i], aiY + seqY[i], stats, score, purpose, playersZoznam)) != []:  # vpravo
 			#print('score' + str(score))
 			#score += 1
 			return score
@@ -446,7 +462,7 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 		stats.current_listXY = []
 		return
 
-	if(dangerCalculator(obstaclesmatrix, next_stepXY[0], next_stepXY[1]) == False) or(purpose == 'danger'):
+	if(dangerCalculator(obstaclesmatrix, next_stepXY[0], next_stepXY[1]) == False) or (purpose == 'danger'):
 		if smer == [0, -1]:
 			stats.path = 'up'
 		elif smer == [0, 1]:

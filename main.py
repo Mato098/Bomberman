@@ -182,6 +182,7 @@ class ai1_stats:
 	vest: str = 'no'
 	piercing: str = 'no'
 	name: str = 'ai1'
+	job: str = 'none'
 	coords: List[str] = field(default_factory=list)
 
 	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
@@ -201,6 +202,7 @@ class PlayerPowerups:
 	piercing: str = 'no'
 	coords: List[str] = field(default_factory=list)
 	name: str = 'player1'
+	job: str = 'none'
 a = PlayerPowerups()
 PlayerPowerups = a
 
