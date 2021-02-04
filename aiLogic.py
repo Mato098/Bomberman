@@ -151,7 +151,7 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose, playersZo
 	elif purpose == 'player_search':
 		for i in range(len(playersZoznam)):
 			if i % 2 == 0:
-				print(playersZoznam[i][1].coords)
+				#print(playersZoznam[i][1].coords)
 				if (playersZoznam[i][1].coords[1] == aiX) and (playersZoznam[i][1].coords[0] == aiY):
 					return [aiX, aiY]
 
@@ -225,7 +225,7 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 							else:
 								placing = True
 			if placing:
-				print('AI places a bomb')
+				#print('AI places a bomb')
 				ai_place_bomb(obstaclesmatrix, aiX, aiY, stats)
 				return
 
@@ -273,7 +273,7 @@ def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 							else:
 								placing = True
 			if placing:
-				print('AI places a bomb')
+				#print('AI places a bomb')
 				ai_place_bomb(obstaclesmatrix, aiX, aiY, stats)
 				return
 
@@ -282,6 +282,8 @@ def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
 	if stats.bombAmount > stats.bombPlaced:
 		if obstaclesmatrix[aiY][aiX].cislo != Policko.bomba:
 			stats.placeBomb = True
+			if stats.name == 'ai1':
+				print('ai1', end='')
 
 
 def dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci je v dosahu nejakej bomby
@@ -448,7 +450,7 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 
 def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	zoznam = stats.current_target_powerup_list
-	print(zoznam)
+	#print(zoznam)
 
 	standing_onXY = zoznam[0][4]
 	next_stepXY = zoznam[0][0]
@@ -456,6 +458,10 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	stats.current_target_powerup_list.pop(0)
 
 	smer = [next_stepXY[0] - standing_onXY[0], next_stepXY[1] - standing_onXY[1]]
+
+	if stats.name == 'ai1':
+		print(purpose, end='')
+		print(zoznam)
 
 	if obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.bomba:
 		print('le bomba')
@@ -491,7 +497,7 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 			stats.path = 'none'
 			stats.current_target_powerup_list = []
 			stats.current_listXY = []
-		print(stats.path)
+		#print(stats.path)
 	else:
 		print('wont go there - danger')
 		stats.current_target_powerup_list = []

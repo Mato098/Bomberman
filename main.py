@@ -1079,9 +1079,6 @@ def ai_move(aiObj, stats, sprites, animcounter, aiName):
 
 			stats.path = 'none'
 
-			#print('presiel 1 block')
-			print(math.floor((platno.coords(ai1)[0]) / 64), math.floor((platno.coords(ai1)[1]) / 64))
-
 		else:
 			if stats.path == 'up':  # sem pridat aj animacie
 				platno.coords(aiObj, platno.coords(aiObj)[0], platno.coords(aiObj)[1] - 3)
@@ -1247,12 +1244,12 @@ def cisloDebug(event):
 	x = math.floor(event.x / 64)
 	y = math.floor(event.y / 64)
 	print(obstaclesMatrix[y][x].cislo, end=' ')
-	print(obstaclesMatrix[y][x].bolTuCrate)
+	print(obstaclesMatrix[y][x].aiSeen)
 
 
 def update_stats_coords(stats, Obj):
 	stats.coords = [math.floor((platno.coords(Obj)[1]) / 64), math.floor((platno.coords(Obj)[0]) / 64)]
-	print(stats.coords)
+	#print(stats.coords)
 
 
 obstaclesMatrix = [  # 1 = obstacle, 0 = crate, 2 = free, 3 = bomba
@@ -1272,17 +1269,17 @@ obstaclesMatrix = [  # 1 = obstacle, 0 = crate, 2 = free, 3 = bomba
 ]  # vsetko podstatne
 reeeeeeferenceMatrix = [
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # walls
-	[1, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 1],  # free
+	[1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1],  # free
 	[1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 1],  # kazda druha pevna
-	[1, 2, 2, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 1],  # free
-	[1, 0, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1, 2, 1],
-	[1, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 1],  # free
-	[1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 1],
-	[1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],  # fre
-	[1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-	[1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],  # free
-	[1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 1],
-	[1, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1],  # free
+	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],  # free
+	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],  # free
+	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],  # fre
+	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],  # free
+	[1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 1],
+	[1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1],  # free
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]  # z toho sa robi obstacles
 
