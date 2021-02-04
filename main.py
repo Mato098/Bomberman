@@ -30,7 +30,7 @@ wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
 wallImg = ImageTk.PhotoImage(wallImg)
 
 player1color = 'color1'
-player2color = 'color4'
+player2color = 'color2'
 player3color = 'color3'
 player4color = 'color4'
 
@@ -59,6 +59,30 @@ for i in range(10, 16):
 	playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
 	playerImg = ImageTk.PhotoImage(playerImg)
 	ai1Sprites.append(playerImg)
+
+ai2Sprites = []
+for i in range(10):
+	playerImg = Image.open(f'bomberman_sprites/{player3color}/tile00{i}.png')
+	playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
+	playerImg = ImageTk.PhotoImage(playerImg)
+	ai2Sprites.append(playerImg)
+for i in range(10, 16):
+	playerImg = Image.open(f'bomberman_sprites/{player3color}/tile0{i}.png')
+	playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
+	playerImg = ImageTk.PhotoImage(playerImg)
+	ai2Sprites.append(playerImg)
+
+ai3Sprites = []
+for i in range(10):
+	playerImg = Image.open(f'bomberman_sprites/{player4color}/tile00{i}.png')
+	playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
+	playerImg = ImageTk.PhotoImage(playerImg)
+	ai3Sprites.append(playerImg)
+for i in range(10, 16):
+	playerImg = Image.open(f'bomberman_sprites/{player4color}/tile0{i}.png')
+	playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
+	playerImg = ImageTk.PhotoImage(playerImg)
+	ai3Sprites.append(playerImg)
 
 bombSprites = []
 for i in range(8):
@@ -189,6 +213,60 @@ class ai1_stats:
 	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
 a = ai1_stats()
 ai1_stats = a
+
+@dataclass
+class ai2_stats:
+
+	moving = False
+	vestStartTime: float = 0
+	startX: int = 0  # zaciatok pohybu o 1 policko
+	startY: int = 0
+	movingDirection: str = 'up'
+	placeBomb = False  # ci ma polozit bombu
+	bombPlaced: int = 0  # pocet uz polozenych bomb
+	bombAmount: int = 1  # max pocet polozenych bomb
+	bombRange: int = 0
+	path: str = 'none'
+	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
+	bombRangeFull: str = 'no'
+	playerSpeed: int = 2
+	vest: str = 'no'
+	piercing: str = 'no'
+	name: str = 'ai2'
+	job: str = 'none'
+	coords: List[str] = field(default_factory=list)
+
+	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
+	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
+a = ai2_stats()
+ai2_stats = a
+
+@dataclass
+class ai3_stats:
+
+	moving = False
+	vestStartTime: float = 0
+	startX: int = 0  # zaciatok pohybu o 1 policko
+	startY: int = 0
+	movingDirection: str = 'up'
+	placeBomb = False  # ci ma polozit bombu
+	bombPlaced: int = 0  # pocet uz polozenych bomb
+	bombAmount: int = 1  # max pocet polozenych bomb
+	bombRange: int = 0
+	path: str = 'none'
+	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
+	bombRangeFull: str = 'no'
+	playerSpeed: int = 2
+	vest: str = 'no'
+	piercing: str = 'no'
+	name: str = 'ai3'
+	job: str = 'none'
+	coords: List[str] = field(default_factory=list)
+
+	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
+	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
+a = ai3_stats()
+ai3_stats = a
 
 
 @dataclass
@@ -326,6 +404,12 @@ def checkBombs():
 					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
 							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
 						ai1_stats.bombPlaced += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai2':
+						ai2_stats.bombPlaced += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai3':
+						ai3_stats.bombPlaced += -1
 
 					explosionFull_only_or_also_Piercing(bombTimerBomb[f])
 				elif (obstaclesMatrix[math.floor(platno.coords(bombTimerBomb[f])[1] / 64)]
@@ -337,6 +421,12 @@ def checkBombs():
 					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
 							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
 						ai1_stats.bombPlaced += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai2':
+						ai2_stats.bombPlaced += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai3':
+						ai3_stats.bombPlaced += -1
 
 					explosionPiercing_only(bombTimerBomb[f])
 				else:  # classic
@@ -347,6 +437,12 @@ def checkBombs():
 					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
 							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
 						ai1_stats.bombPlaced += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai2':
+						ai2_stats.bombPlaced += -1
+					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai3':
+						ai3_stats.bombPlaced += -1
 
 					explosionClassic(bombTimerBomb[f])
 
@@ -957,7 +1053,7 @@ def ai_place_bomb(stats, aiObj):
 		obstaclesMatrix[aiY][aiX].cislo = Policko.bomba
 		obstaclesMatrix[aiY][aiX].bombRange = stats.bombRange
 		obstaclesMatrix[aiY][aiX].bombRangeFull = stats.bombRangeFull
-		obstaclesMatrix[aiY][aiX].bombParent = 'ai1'
+		obstaclesMatrix[aiY][aiX].bombParent = stats.name
 		platno.tag_raise(aiObj)
 		stats.bombPlaced += 1
 		bombTimerBomb.append(bomba)
@@ -1101,8 +1197,12 @@ def ai_anim(aiObj, smer, sprites, counter, aiName):
 
 def ai_powerup(aiObj, stats, powerupName, powerupObjj):
 	platno.delete(powerupObjj)
-	if aiObj == ai1:
+	if stats.name == 'ai1':
 		ai_stats = ai1_stats
+	elif stats.name == 'ai2':
+		ai_stats = ai2_stats
+	elif stats.name == 'ai3':
+		ai_stats = ai3_stats
 
 	ai_stats.current_target_powerupXY = [None]
 
@@ -1152,6 +1252,7 @@ def cisloDebug(event):
 
 def update_stats_coords(stats, Obj):
 	stats.coords = [math.floor((platno.coords(Obj)[1]) / 64), math.floor((platno.coords(Obj)[0]) / 64)]
+	print(stats.coords)
 
 
 obstaclesMatrix = [  # 1 = obstacle, 0 = crate, 2 = free, 3 = bomba
@@ -1220,11 +1321,19 @@ for i in range(13):  # kreslenie podlahy, krabic, power-up-ov, stavanie hracej p
 		premenna += 1
 
 player = platno.create_image(150, 80, image=playerSprites[0])
-ai1 = platno.create_image(14 * 64 - 32, 80, image=ai1Img)
+ai1 = platno.create_image(14 * 64 - 32, 80, image=ai1Sprites[0])
+ai2 = platno.create_image(14 * 64 - 32, 80 + 64 * 10, image=ai2Sprites[0])
+ai3 = platno.create_image(2 * 64 - 32, 80 + 64 * 10, image=ai3Sprites[0])
 
 playersZoznam = []
 playersZoznam.append([player, PlayerPowerups])
 playersZoznam.append([ai1, ai1_stats])
+playersZoznam.append([ai2, ai2_stats])
+playersZoznam.append([ai3, ai3_stats])
+
+update_stats_coords(ai1_stats, ai1)
+update_stats_coords(ai2_stats, ai2)
+update_stats_coords(ai3_stats, ai3)
 
 
 platno.update()
@@ -1232,6 +1341,9 @@ platno.update()
 
 t0 = time.time()  # cas na animaciu hraca
 ai1_anim_time = time.time()
+ai2_anim_time = time.time()
+ai3_anim_time = time.time()
+
 ai1_anim_counter = 0
 ai2_anim_counter = 0
 ai3_anim_counter = 0
@@ -1349,6 +1461,7 @@ while gamestate == 1:
 		if time.time() - tBombs > 0.1:  # bomb anim speed regulator
 			animBombs()
 			tBombs = time.time()
+
 	checkBombs()
 
 	if time.time() - tExplosion > 0.1:
@@ -1358,8 +1471,8 @@ while gamestate == 1:
 					if obstaclesMatrix[e][i].expCislo > 9:
 						animExplosions(e, i)
 						tExplosion = time.time()
-	if len(unwalkableBomb) != 0:
 
+	if len(unwalkableBomb) != 0:
 		if (unwalkableBomb[0] != (math.floor((platno.coords(player)[0]) / 64))) \
 				or (unwalkableBomb[1] != (math.floor((platno.coords(player)[1]) / 64))):
 			obstaclesMatrix[int(unwalkableBomb[1])][int(unwalkableBomb[0])].walkable = 'no'
@@ -1374,6 +1487,10 @@ while gamestate == 1:
 			obstaclesMatrix[math.floor((platno.coords(player)[1]) / 64)][math.floor((platno.coords(player)[0]) / 64)].powerupObj)
 		ai1_stats.current_target_powerup_list = []
 		ai1_stats.current_listXY = []
+		ai2_stats.current_target_powerup_list = []
+		ai2_stats.current_listXY = []
+		ai3_stats.current_target_powerup_list = []
+		ai3_stats.current_listXY = []
 
 		obstaclesMatrix[math.floor((platno.coords(player)[1]) / 64)][
 			math.floor((platno.coords(player)[0]) / 64)].powerup = ''
@@ -1391,33 +1508,59 @@ while gamestate == 1:
 			                        math.floor((platno.coords(ai1)[0]) / 64)].powerupObj)
 		obstaclesMatrix[math.floor((platno.coords(ai1)[1]) / 64)][
 			math.floor((platno.coords(ai1)[0]) / 64)].powerup = ''
-		print('-powerup pickup-')
+		print('-ai1 powerup pickup-')
+	if obstaclesMatrix[math.floor((platno.coords(ai2)[1]) / 64)][   # ai powerup pickup
+		math.floor((platno.coords(ai2)[0]) / 64)].powerup != '':  # ak je tam nejaky powerup, ...
+		ai_powerup(ai2, ai2_stats, obstaclesMatrix[math.floor((platno.coords(ai2)[1]) / 64)][
+			                        math.floor((platno.coords(ai2)[0]) / 64)].powerup,
+		                           obstaclesMatrix[math.floor((platno.coords(ai2)[1]) / 64)][
+			                        math.floor((platno.coords(ai2)[0]) / 64)].powerupObj)
+		obstaclesMatrix[math.floor((platno.coords(ai2)[1]) / 64)][
+			math.floor((platno.coords(ai2)[0]) / 64)].powerup = ''
+		print('-ai2 powerup pickup-')
+	if obstaclesMatrix[math.floor((platno.coords(ai3)[1]) / 64)][   # ai powerup pickup
+		math.floor((platno.coords(ai3)[0]) / 64)].powerup != '':  # ak je tam nejaky powerup, ...
+		ai_powerup(ai3, ai3_stats, obstaclesMatrix[math.floor((platno.coords(ai3)[1]) / 64)][
+			                        math.floor((platno.coords(ai3)[0]) / 64)].powerup,
+		                           obstaclesMatrix[math.floor((platno.coords(ai3)[1]) / 64)][
+			                        math.floor((platno.coords(ai3)[0]) / 64)].powerupObj)
+		obstaclesMatrix[math.floor((platno.coords(ai3)[1]) / 64)][
+			math.floor((platno.coords(ai3)[0]) / 64)].powerup = ''
+		print('-ai3 powerup pickup-')
 
 	if time.time() - ai1_anim_time > 0.01 - (ai1_stats.playerSpeed - 2) * 0.002:  # ai1 anim + movement
 		if ai1_stats.path != 'none':
 			ai_move(ai1, ai1_stats, ai1Sprites, ai1_anim_counter, 'ai1')
 			ai1_anim_time = time.time()
 		else:
-			#if ai1_stats.moving == False:
-			#	playersCoords = []
-			#	for i in playersZoznam:
-			#		playersCoords.append(platno.coords(i))
-			#	for i in range(len(playersCoords)):
-			#		playersCoords[i][0] = math.floor(playersCoords[i][0] / 64)
-			#		playersCoords[i][1] = math.floor(playersCoords[i][1] / 64)
-
 				update_stats_coords(ai1_stats, ai1)
 				update_stats_coords(PlayerPowerups, player)
 
 				aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai1)[1]) / 64)
 				                      , math.floor((platno.coords(ai1)[0]) / 64), ai1_stats, playersZoznam)
 				ai_place_bomb(ai1_stats, ai1)
+	if time.time() - ai2_anim_time > 0.01 - (ai2_stats.playerSpeed - 2) * 0.002:  # ai2 anim + movement
+		if ai2_stats.path != 'none':
+			ai_move(ai2, ai2_stats, ai2Sprites, ai2_anim_counter, 'ai2')
+			ai2_anim_time = time.time()
+		else:
+				update_stats_coords(ai2_stats, ai2)
+				update_stats_coords(PlayerPowerups, player)
 
+				aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai2)[1]) / 64)
+				                      , math.floor((platno.coords(ai2)[0]) / 64), ai2_stats, playersZoznam)
+				ai_place_bomb(ai2_stats, ai2)
+	if time.time() - ai3_anim_time > 0.01 - (ai3_stats.playerSpeed - 2) * 0.002:  # ai3 anim + movement
+		if ai3_stats.path != 'none':
+			ai_move(ai3, ai3_stats, ai3Sprites, ai3_anim_counter, 'ai3')
+			ai3_anim_time = time.time()
+		else:
+				update_stats_coords(ai3_stats, ai3)
+				update_stats_coords(PlayerPowerups, player)
 
-
-
-
-
+				aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai3)[1]) / 64)
+				                      , math.floor((platno.coords(ai3)[0]) / 64), ai3_stats, playersZoznam)
+				ai_place_bomb(ai3_stats, ai3)
 
 
 exit()

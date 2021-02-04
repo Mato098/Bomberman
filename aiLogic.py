@@ -25,7 +25,7 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
 	else:
-		if stats.name == 'ai1':
+		if 1 == 1:
 			if (stats.current_target_powerup_list == [None]) or (stats.current_target_powerup_list == []):  # ak nema ziaden ciel(powerup)
 				pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'powerup', playersZoznam)  # tak si najde
 				stats.job = 'powerup'
@@ -50,10 +50,6 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 			move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'player_wall')
 
 		check_for_targets(obstaclesmatrix, positionX, positionY, stats, playersZoznam)
-
-
-
-
 
 	return stats
 
@@ -155,6 +151,7 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose, playersZo
 	elif purpose == 'player_search':
 		for i in range(len(playersZoznam)):
 			if i % 2 == 0:
+				print(playersZoznam[i][1].coords)
 				if (playersZoznam[i][1].coords[1] == aiX) and (playersZoznam[i][1].coords[0] == aiY):
 					return [aiX, aiY]
 
@@ -285,10 +282,6 @@ def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
 	if stats.bombAmount > stats.bombPlaced:
 		if obstaclesmatrix[aiY][aiX].cislo != Policko.bomba:
 			stats.placeBomb = True
-
-
-def target_destructable_path_calculator(obstaclesmatrix, positionX, positionY, targetX, targetY):
-	pass
 
 
 def dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci je v dosahu nejakej bomby
