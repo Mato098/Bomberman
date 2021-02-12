@@ -1,8 +1,6 @@
 #! python3
 
 import tkinter
-import runpy
-
 
 
 okno = tkinter.Tk()
@@ -23,6 +21,8 @@ quit_hover = tkinter.PhotoImage(file='other_textures/quit_hover.png')
 platno.create_image(64 * 15 / 2, 64 * 13 / 2, image=background)
 start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
 quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
+
+platno.config(cursor='dotbox')
 
 def pohybMysi(event):
 	global start

@@ -18,15 +18,14 @@ okno.title('Bomberman')
 
 okno.focus_force()  # aby sa stalo aktivnym oknom (a bralo keyboard input)
 
-sirka = 64 * 15  # playable area je 13*11 ale s krajmi je 15*13
+sirka = 64 * 15 + 276  # playable area je 13*11 ale s krajmi je 15*13 + scoreboard
 vyska = 64 * 13  # 64*64
 
 platno = tkinter.Canvas(width=sirka, height=vyska)
-platno.pack(fill="both", expand=True)
+platno.grid(column=0, row=0)
 background = tkinter.PhotoImage(file='other_textures/bg64.png')
 crateImg = tkinter.PhotoImage(file='other_textures/crate64.png')
 
-winres = 1
 
 wallImg = Image.open('other_textures/wall2.png')
 wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
@@ -1352,6 +1351,39 @@ update_stats_coords(ai1_stats, ai1)
 update_stats_coords(ai2_stats, ai2)
 update_stats_coords(ai3_stats, ai3)
 
+
+  # -------------tabulka init
+scoreImg = Image.open('other_textures/banner.png')
+scoreImg = ImageTk.PhotoImage(scoreImg)
+
+for i in range(1, 5):
+	platno.create_image(64 * 15 + 138, 128 * i - 62, image=scoreImg)
+	if i == 1:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 145, 128 * i - 103, text='Player', font='ArcadeClassic', fill='white')
+		fotka1 = Image.open(f'bomberman_sprites/{player1color}/tile010.png')
+		fotka1 = fotka1.crop([0, 0, 70, 84])
+		fotka1 = ImageTk.PhotoImage(fotka1)
+		mugshot1 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka1)
+	elif i == 2:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 127, 128 * i - 103, text='AI 1', font='ArcadeClassic', fill='white')
+		fotka2 = Image.open(f'bomberman_sprites/{player2color}/tile010.png')
+		fotka2 = fotka2.crop([0, 0, 70, 84])
+		fotka2 = ImageTk.PhotoImage(fotka2)
+		mugshot2 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka2)
+	elif i == 3:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 127, 128 * i - 103, text='AI 2', font='ArcadeClassic', fill='white')
+		fotka3 = Image.open(f'bomberman_sprites/{player3color}/tile010.png')
+		fotka3 = fotka3.crop([0, 0, 70, 84])
+		fotka3 = ImageTk.PhotoImage(fotka3)
+		mugshot3 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka3)
+	elif i == 4:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 127, 128 * i - 103, text='AI 3', font='ArcadeClassic', fill='white')
+		fotka4 = Image.open(f'bomberman_sprites/{player4color}/tile010.png')
+		fotka4 = fotka4.crop([0, 0, 70, 84])
+		fotka4 = ImageTk.PhotoImage(fotka4)
+		mugshot4 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka4)
+
+  # ------tabulka init koniec
 
 platno.update()
 
