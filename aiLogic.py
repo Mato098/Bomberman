@@ -460,8 +460,9 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	smer = [next_stepXY[0] - standing_onXY[0], next_stepXY[1] - standing_onXY[1]]
 
 	if stats.name == 'ai1':
-		print(purpose, end='')
-		print(zoznam)
+		pass
+	#	print(purpose, end='')
+	#	print(zoznam)
 
 	if obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.bomba:
 		print('le bomba')
@@ -499,7 +500,7 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 			stats.current_listXY = []
 		#print(stats.path)
 	else:
-		print('wont go there - danger')
+		#print('wont go there - danger')
 		stats.current_target_powerup_list = []
 		stats.current_listXY = []
 

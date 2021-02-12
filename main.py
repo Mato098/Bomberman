@@ -14,16 +14,19 @@ import aiLogic
 
 
 okno = tkinter.Tk()
-okno.title = 'Bomberman'
+okno.title('Bomberman')
 
+okno.focus_force()  # aby sa stalo aktivnym oknom (a bralo keyboard input)
 
 sirka = 64 * 15  # playable area je 13*11 ale s krajmi je 15*13
 vyska = 64 * 13  # 64*64
 
 platno = tkinter.Canvas(width=sirka, height=vyska)
-platno.pack()
+platno.pack(fill="both", expand=True)
 background = tkinter.PhotoImage(file='other_textures/bg64.png')
 crateImg = tkinter.PhotoImage(file='other_textures/crate64.png')
+
+winres = 1
 
 wallImg = Image.open('other_textures/wall2.png')
 wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
@@ -1251,6 +1254,23 @@ def update_stats_coords(stats, Obj):
 	stats.coords = [math.floor((platno.coords(Obj)[1]) / 64), math.floor((platno.coords(Obj)[0]) / 64)]
 	#print(stats.coords)
 
+resChangeBuffer = 0
+def screenResize(event):
+	global resChangeBuffer
+	resChangeBuffer = time.time()
+
+
+def gameResize():
+	winres = (platno.winfo_width() - 4)/(64*15)
+	print()
+
+	objects = platno.find_all()
+	for i in objects:
+		platno.coords(i, platno.coords(i)[0] * winres, platno.coords(i)[1] * winres)
+		
+
+
+
 
 obstaclesMatrix = [  # 1 = obstacle, 0 = crate, 2 = free, 3 = bomba
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # walls
@@ -1363,6 +1383,7 @@ unwalkableBomb = []
 
 platno.bind_all('<space>', placeBomb)
 platno.bind_all('<Button-1>', cisloDebug)
+platno.bind_all('<Configure>', screenResize)
 
 
 # mainloop
@@ -1370,6 +1391,12 @@ platno.bind_all('<Button-1>', cisloDebug)
 gamestate = 1
 strafecounter = 0  # player strafe movement
 while gamestate == 1:
+
+	if (time.time() - resChangeBuffer  > 0.2) and (resChangeBuffer != 0):
+		resChangeBuffer = 0
+		gameResize()
+
+
 	if keyboard.is_pressed('a') and keyboard.is_pressed('w'):  # user input, najskor strafing
 		playerRotation = 'left'
 		if time.time() - t0 > 0.01 - (PlayerPowerups.playerSpeed - 2) * 0.002:  # hore, dolava
@@ -1454,7 +1481,8 @@ while gamestate == 1:
 	if keyboard.is_pressed('Escape'):
 		exit()
 
-	if (playerPlacedBombs != 0) or (ai1_stats.bombPlaced):
+	if (playerPlacedBombs != 0) or (ai1_stats.bombPlaced != 0) or\
+		(ai2_stats.bombPlaced != 0) or (ai3_stats.bombPlaced != 0):
 		if time.time() - tBombs > 0.1:  # bomb anim speed regulator
 			animBombs()
 			tBombs = time.time()
