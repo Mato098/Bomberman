@@ -283,7 +283,7 @@ def ai_place_bomb(obstaclesmatrix, aiX, aiY, stats):
 		if obstaclesmatrix[aiY][aiX].cislo != Policko.bomba:
 			stats.placeBomb = True
 			if stats.name == 'ai1':
-				print('ai1', end='')
+				pass
 
 
 def dangerCalculator(obstaclesmatrix, positionX, positionY):  # ci je v dosahu nejakej bomby
@@ -385,8 +385,9 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 				node_current = i
 
 		if node_current[0] == goal:  # ak je dane policko cielom
-			#print('mam ciel')
+			node_current[4] = closed[len(closed) - 1][0]  # daco zle robi s poslednym, ta toto by to malo fixnut
 			closed.append(node_current)
+
 			break
 
 		seqX = [+1, +0, -1, +0]
@@ -429,6 +430,7 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 		print('OPEN list is empty!')
 
 	else:  # list branches cleanup
+		#print('star', closed)
 		origo = []
 		for i in closed:
 			origo.append(i)
@@ -445,6 +447,8 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 		gut.reverse()
 		gut.pop(0)
 
+		#print('gut- ', gut)
+
 		return gut
 
 
@@ -455,14 +459,16 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 	standing_onXY = zoznam[0][4]
 	next_stepXY = zoznam[0][0]
 
+	if stats.name == 'ai1':
+		pass
+		#print(purpose, end=' ')
+		#print(zoznam)
+
 	stats.current_target_powerup_list.pop(0)
 
 	smer = [next_stepXY[0] - standing_onXY[0], next_stepXY[1] - standing_onXY[1]]
 
-	if stats.name == 'ai1':
-		pass
-	#	print(purpose, end='')
-	#	print(zoznam)
+
 
 	if obstaclesmatrix[next_stepXY[1]][next_stepXY[0]].cislo == Policko.bomba:
 		print('le bomba')
