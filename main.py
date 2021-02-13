@@ -1643,6 +1643,15 @@ while gamestate == 1:
 					                      , math.floor((platno.coords(ai3)[0]) / 64), ai3_stats, playersZoznam)
 					ai_place_bomb(ai3_stats, ai3)
 
+game_over = Image.open('other_textures/game_over.png')
+game_over = ImageTk.PhotoImage(game_over)
 
-exit()
-tkinter.mainloop()
+gme_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
+platno.update()
+
+time.sleep(0.5)
+
+keyboard.wait('Space')
+okno.destroy()
+
+#tkinter.mainloop()

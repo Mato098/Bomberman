@@ -2,58 +2,71 @@
 
 import tkinter
 
+import keyboard
 
-okno = tkinter.Tk()
-okno.title('Bomberman')
+while 1 == 1:
+	okenko = tkinter.Tk()
+	okenko.title('Bomberman')
 
-sirka = 64 * 15  # playable area je 13*11 ale s krajmi je 15*13
-vyska = 64 * 13  # 64*64
+	okenko.focus_force()
 
-platno = tkinter.Canvas(width=sirka, height=vyska)
-platno.pack()
+	sirka = 64 * 15  # playable area je 13*11 ale s krajmi je 15*13
+	vyska = 64 * 13  # 64*64
 
-background = tkinter.PhotoImage(file='other_textures/menu.png')
-start_normal = tkinter.PhotoImage(file='other_textures/start_game_normal.png')
-start_hover = tkinter.PhotoImage(file='other_textures/start_game_hover.png')
-quit_normal = tkinter.PhotoImage(file='other_textures/quit_normal.png')
-quit_hover = tkinter.PhotoImage(file='other_textures/quit_hover.png')
+	platno = tkinter.Canvas(width=sirka, height=vyska)
+	platno.pack()
 
-platno.create_image(64 * 15 / 2, 64 * 13 / 2, image=background)
-start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
-quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
+	background = tkinter.PhotoImage(file='other_textures/menu.png')
+	start_normal = tkinter.PhotoImage(file='other_textures/start_game_normal.png')
+	start_hover = tkinter.PhotoImage(file='other_textures/start_game_hover.png')
+	quit_normal = tkinter.PhotoImage(file='other_textures/quit_normal.png')
+	quit_hover = tkinter.PhotoImage(file='other_textures/quit_hover.png')
 
-platno.config(cursor='dotbox')
+	platno.create_image(64 * 15 / 2, 64 * 13 / 2, image=background)
+	start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
+	quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
 
-def pohybMysi(event):
-	global start
-	global quit
-	x, y = event.x, event.y
-	if (240 < x < 720) and (420 < y < 480):
-		platno.delete(start)
-		start = platno.create_image(64 * 15 / 2, 450, image=start_hover)
-	else:
-		platno.delete(start)
-		start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
+	platno.config(cursor='dotbox')
 
-	if (240 < x < 720) and (490 < y < 540):
-		platno.delete(quit)
-		quit = platno.create_image(64 * 15 / 2, 520, image=quit_hover)
-	else:
-		platno.delete(quit)
-		quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
+	aa = 0
+
+	def pohybMysi(event):
+		global start
+		global quit
+		x, y = event.x, event.y
+		if (240 < x < 720) and (420 < y < 480):
+			platno.delete(start)
+			start = platno.create_image(64 * 15 / 2, 450, image=start_hover)
+		else:
+			platno.delete(start)
+			start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
+
+		if (240 < x < 720) and (490 < y < 540):
+			platno.delete(quit)
+			quit = platno.create_image(64 * 15 / 2, 520, image=quit_hover)
+		else:
+			platno.delete(quit)
+			quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
 
 
-def click(event):
-	x, y = event.x, event.y
-	if (240 < x < 720) and (420 < y < 480):
-		okno.destroy()
-		import main
+	def click(event):
+		global aa
+		x, y = event.x, event.y
+		if (240 < x < 720) and (420 < y < 480):
+			aa += 1
+			okenko.destroy()
+			import main
 
-	elif (240 < x < 720) and (490 < y < 540):
+		elif (240 < x < 720) and (490 < y < 540):
+			exit()
+
+
+	def koniec(event):
 		exit()
 
 
-platno.bind('<Motion>', pohybMysi)
-platno.bind('<Button-1>', click)
+	platno.bind('<Motion>', pohybMysi)
+	platno.bind('<Button-1>', click)
+	platno.bind_all('<Escape>', koniec)
 
-tkinter.mainloop()
+	tkinter.mainloop()
