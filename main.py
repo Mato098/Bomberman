@@ -1423,9 +1423,9 @@ platno.bind_all('<Button-1>', cisloDebug)
 
 # mainloop
 
-gamestate = 1
+gamestate = 'playing'
 strafecounter = 0  # player strafe movement
-while gamestate == 1:
+while gamestate == 'playing':
 	if keyboard.is_pressed('a') and keyboard.is_pressed('w'):  # user input, najskor strafing
 		playerRotation = 'left'
 		if time.time() - t0 > 0.01 - (PlayerPowerups.playerSpeed - 2) * 0.002:  # hore, dolava
@@ -1535,7 +1535,7 @@ while gamestate == 1:
   # ---------skapacie mechaniky
 	if obstaclesMatrix[math.floor((platno.coords(player)[1]) / 64)][math.floor((platno.coords(player)[0]) / 64)].tileName == 'explosion':
 		if PlayerPowerups.vest == 'no':
-			gamestate = 0
+			gamestate = 'lost'
 	if ai1_stats.dead != True:
 		if obstaclesMatrix[ai1_stats.coords[0]][ai1_stats.coords[1]].tileName == 'explosion':
 			if ai1_stats.vest == 'no':  # skapal
@@ -1643,14 +1643,23 @@ while gamestate == 1:
 					                      , math.floor((platno.coords(ai3)[0]) / 64), ai3_stats, playersZoznam)
 					ai_place_bomb(ai3_stats, ai3)
 
-game_over = Image.open('other_textures/game_over.png')
-game_over = ImageTk.PhotoImage(game_over)
+	if (ai1_stats.dead == True) and (ai2_stats.dead == True) and (ai3_stats.dead == True):
+		gamestate = 'won'
 
-gme_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
-platno.update()
+if gamestate == 'lost':
+	game_over = Image.open('other_textures/game_over.png')
+	game_over = ImageTk.PhotoImage(game_over)
+	g_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
+	platno.update()
+
+elif gamestate == 'won':
+	game_won = Image.open('other_textures/victory_screen.png')
+	game_won = ImageTk.PhotoImage(game_won)
+	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
+	platno.update()
+
 
 time.sleep(0.5)
-
 keyboard.wait('Space')
 okno.destroy()
 

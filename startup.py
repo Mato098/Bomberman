@@ -2,8 +2,7 @@
 
 
 import tkinter
-import os, sys
-from importlib import reload
+import os
 
 
 okenko = tkinter.Tk()
