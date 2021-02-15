@@ -10,8 +10,8 @@ Victory screen (edited) - Bryce (AIBryce) Corbett (https://www.deviantart.com/ai
 
 Powerup sprites - Power Bomberman fangame (http://www.bombermanboard.com/viewtopic.php?t=1925)
 
-start menu - https://wallpaperaccess.com/
+Start menu - https://wallpaperaccess.com/
 
-explosion sprites - Satik64 (https://opengameart.org/users/satik64)
+Explosion sprites - Satik64 (https://opengameart.org/users/satik64)
 
-scoreboard sprites - Buch (https://opengameart.org/users/buch)
+Scoreboard sprites - Buch (https://opengameart.org/users/buch)
