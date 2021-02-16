@@ -15,3 +15,7 @@ Start menu - https://wallpaperaccess.com/
 Explosion sprites - Satik64 (https://opengameart.org/users/satik64)
 
 Scoreboard sprites - Buch (https://opengameart.org/users/buch)
+
+Keyboard sprites - @Hyohnoo
+
+
