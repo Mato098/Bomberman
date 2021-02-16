@@ -1,6 +1,7 @@
 # Bomberman
 Made as a school project
 
+![snapshot](other_textures/sample.PNG)
 
 # Credits
 
