@@ -1357,9 +1357,22 @@ update_stats_coords(ai3_stats, ai3)
   # koniec init hracov
 
 
-  # -------------tabulka init
+  # -------------tabulka a ten zbytok init
 scoreImg = Image.open('other_textures/banner.png')
 scoreImg = ImageTk.PhotoImage(scoreImg)
+zelezo = Image.open('other_textures/metal.jpg')
+zelezo = ImageTk.PhotoImage(zelezo)
+zelezoZ = []
+for i in range(3):
+	zeeelezo = platno.create_image(64 * 15 + 138, (297 / 2) + 297 * i, image=zelezo)  # to na com su pomocky
+	zelezoZ.append(zeeelezo)
+divider = Image.open('other_textures/divider.png')
+divider = ImageTk.PhotoImage(divider)
+divajder = platno.create_image(64 * 15 + 10, 64 * 13 / 2, image=divider)  # pas medzi hracou plochou a statmi
+controls = Image.open('other_textures/controls.png')
+controls = ImageTk.PhotoImage(controls)
+controlsss = platno.create_image(64 * 15 + 145, 650, image=controls)
+
 
 for i in range(1, 5):
 	platno.create_image(64 * 15 + 138, 128 * i - 62, image=scoreImg)
