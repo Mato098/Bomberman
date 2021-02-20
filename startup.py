@@ -48,12 +48,13 @@ def pohybMysi(event):
 def click(event):
 	global aa
 	global  menu_tune
+
+	mixer.Sound.play(click_sound)
+
 	x, y = event.x, event.y
 	if (240 < x < 720) and (420 < y < 480):
 		aa += 1
 		okenko.destroy()
-
-		mixer.Sound.play(click_sound)
 		mixer.music.stop()
 
 		import main  # launch game

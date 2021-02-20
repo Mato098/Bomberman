@@ -177,9 +177,7 @@ vestImg = ImageTk.PhotoImage(vestImg)
 piercingImg = Image.open('other_textures/pierceBomb.png')
 piercingImg = ImageTk.PhotoImage(piercingImg)
 
-ai1Img = Image.open('ai1.png')
-ai1Img = ai1Img.resize((44, 87), Image.ANTIALIAS)
-ai1Img = ImageTk.PhotoImage(ai1Img)
+
 
 dead = Image.open(f'other_textures/dead.png')
 dead = dead.resize((130, 130), Image.ANTIALIAS)
