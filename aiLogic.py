@@ -500,7 +500,7 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 		elif smer == [-1, 0]:
 			stats.path = 'left'
 		else:
-			print('neni dobry smer tunak')
+			print('neni dobry smer tunak')  # tu je niekedy BUG a sa AI prestane hybat, ani skapat nemoze, inokedy nedojde ku powerupu(mozno separate bug)
 			stats.path = 'none'
 			stats.current_target_powerup_list = []
 			stats.current_listXY = []
@@ -509,19 +509,3 @@ def move_podla_zoznamu(aiX, aiY, stats, obstaclesmatrix, purpose):
 		#print('wont go there - danger')
 		stats.current_target_powerup_list = []
 		stats.current_listXY = []
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

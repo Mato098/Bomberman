@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from PIL import Image, ImageTk
 from enum import IntEnum
 from typing import List  # aby som mohol mat v dataclasse zoznam
+from pygame import mixer  # zvuk
 
 import aiLogic
 
@@ -35,6 +36,15 @@ player1color = 'color1'
 player2color = 'color2'
 player3color = 'color3'
 player4color = 'color4'
+
+
+mixer.init()
+mixer.music.load('sound/Decktonic_-_Night_Drive_(Strong Suit Remix).wav')
+mixer.music.play(-1)
+
+bomb_place_sound = mixer.Sound('sound/bomb_place.wav')
+explosion_sound = mixer.Sound('sound/explosion.wav')
+death_sound = mixer.Sound('sound/death.wav')
 
 
 
@@ -368,6 +378,8 @@ def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je 
 		x = math.floor(platno.coords(player)[0] / 64)
 		y = math.floor((platno.coords(player)[1] + 20) / 64)
 		if obstaclesMatrix[y][x].cislo != Policko.bomba:
+			mixer.Sound.play(bomb_place_sound)
+
 			bomba = platno.create_image(x * 64 + 32, y * 64 + 32, image=bombSprites[0])
 			obstaclesMatrix[y][x].obj = bomba
 			obstaclesMatrix[y][x].cislo = Policko.bomba
@@ -384,6 +396,8 @@ def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je 
 
 			unwalkableBomb.append(math.floor((platno.coords(player)[0]) / 64))
 			unwalkableBomb.append(math.floor((platno.coords(player)[1]) / 64))
+
+
 
 
 def animBombs():
@@ -520,6 +534,8 @@ def explosionClassic(bomba):
 		x = math.floor(platno.coords(bomba)[1] / 64)
 	else:
 		print('non existing bomb')
+
+	mixer.Sound.play(explosion_sound)
 
 	if expPlacementJudge(x, y, 'yes'):  # stred
 		createExp(y, x, Policko.expStred, 'up')
@@ -1073,6 +1089,8 @@ def ai_place_bomb(stats, aiObj):
 
 		unwalkableBomb.append(aiX)
 		unwalkableBomb.append(aiY)
+
+		mixer.Sound.play(bomb_place_sound)
 
 
 def ai_move(aiObj, stats, sprites, animcounter, aiName):
@@ -1659,7 +1677,10 @@ while gamestate == 'playing':
 	if (ai1_stats.dead == True) and (ai2_stats.dead == True) and (ai3_stats.dead == True):
 		gamestate = 'won'
 
+mixer.music.stop()
+
 if gamestate == 'lost':
+	mixer.Sound.play(death_sound)
 	game_over = Image.open('other_textures/game_over.png')
 	game_over = ImageTk.PhotoImage(game_over)
 	g_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
