@@ -231,6 +231,7 @@ class ai1_stats:
 	job: str = 'none'
 	dead: bool = False
 	coords: List[str] = field(default_factory=list)
+	board_objects: List[str] = field(default_factory=list)
 
 	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
 	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
@@ -259,6 +260,7 @@ class ai2_stats:
 	job: str = 'none'
 	dead: bool = False
 	coords: List[str] = field(default_factory=list)
+	board_objects: List[str] = field(default_factory=list)
 
 	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
 	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
@@ -287,6 +289,7 @@ class ai3_stats:
 	job: str = 'none'
 	dead: bool = False
 	coords: List[str] = field(default_factory=list)
+	board_objects: List[str] = field(default_factory=list)
 
 	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
 	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
@@ -297,8 +300,8 @@ ai3_stats = a
 @dataclass
 class PlayerPowerups:
 	vestStartTime: float = 0
-	bombAmount: int = 3
-	bombRange: int = 2
+	bombAmount: int = 1
+	bombRange: int = 0
 	bombRangeFull: str = 'no'
 	playerSpeed: int = 2
 	vest: str = 'no'
@@ -307,6 +310,7 @@ class PlayerPowerups:
 	name: str = 'player1'
 	job: str = 'none'
 	dead: bool = False
+	board_objects: List[str] = field(default_factory=list)
 a = PlayerPowerups()
 PlayerPowerups = a
 
@@ -1072,6 +1076,7 @@ def powerup(name, obj):
 
 	if name == 'piercingImg':
 		PlayerPowerups.piercing = 'yes'
+	update_powerup_board(PlayerPowerups)
 
 
 def ai_place_bomb(stats, aiObj):
@@ -1273,12 +1278,15 @@ def ai_powerup(aiObj, stats, powerupName, powerupObjj):
 	if powerupName == 'piercingImg':
 		ai_stats.piercing = 'yes'
 
+	update_powerup_board(stats)
+
 
 def cisloDebug(event):
 	x = math.floor(event.x / 64)
 	y = math.floor(event.y / 64)
-	print(obstaclesMatrix[y][x].cislo, end=' ')
-	print(obstaclesMatrix[y][x].aiSeen)
+	#print(obstaclesMatrix[y][x].cislo, end=' ')
+	#print(obstaclesMatrix[y][x].aiSeen)
+	print(event.x, event.y)
 
 
 def update_stats_coords(stats, Obj):
@@ -1286,6 +1294,44 @@ def update_stats_coords(stats, Obj):
 	#print(stats.coords)
 
 
+def update_powerup_board(stats):
+	offset = 0
+	if stats.name == 'player1':
+		offset = 0
+	elif stats.name == 'ai1':
+		offset = 128
+	elif stats.name == 'ai2':
+		offset = 128 * 2
+	elif stats.name == 'ai3':
+		offset = 128 * 3
+
+	for i in stats.board_objects:
+		platno.delete(i)
+
+	#bomb amount
+	for i in range(stats.bombAmount):
+		a = platno.create_image(1086 + i * 15, 68 + offset, image=amountUpImg)
+		stats.board_objects.append(a)
+	#bomb range
+	for i in range(stats.bombRange + 1):
+		a = platno.create_image(1086 + i * 15, 100 + offset, image=rangeUpImg)
+		stats.board_objects.append(a)
+	#speed
+	for i in range(stats.playerSpeed):
+		a = platno.create_image(1207, 31 + offset + i * 15, image=speedUpImg)
+		stats.board_objects.append(a)
+	# vest
+	if stats.vest == 'yes':
+		a = platno.create_image(1170, 31 + offset, image=vestImg)
+		stats.board_objects.append(a)
+	#piercing
+	if stats.piercing == 'yes':
+		a = platno.create_image(1170, 65 + offset, image=piercingImg)
+		stats.board_objects.append(a)
+	#full range
+	if stats.bombRangeFull == 'yes':
+		a = platno.create_image(1170, 100 + offset, image=rangeFullImg)
+		stats.board_objects.append(a)
 def died(name):
 	if name == 'ai1':
 		mugShiet1 = platno.create_image(64 * 14 + 132, 128 * 2 - 47, image=dead)
@@ -1296,6 +1342,8 @@ def died(name):
 	if name == 'ai3':
 		mugShiet3 = platno.create_image(64 * 14 + 132, 128 * 4 - 47, image=dead)
 		platno.update()
+
+
 
 
 
@@ -1428,7 +1476,10 @@ for i in range(1, 5):
   # ------tabulka init koniec
 
 platno.update()
-
+update_powerup_board(PlayerPowerups)
+update_powerup_board(ai1_stats)
+update_powerup_board(ai2_stats)
+update_powerup_board(ai3_stats)
 
 t0 = time.time()  # cas na animaciu hraca
 ai1_anim_time = time.time()
