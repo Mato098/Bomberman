@@ -384,11 +384,15 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 				najmensi_f = i[3]
 				node_current = i
 
-		if node_current[0] == goal:  # ak je dane policko cielom
-			node_current[4] = closed[len(closed) - 1][0]  # daco zle robi s poslednym, ta toto by to malo fixnut
+		if node_current[0] == goal:  # ak je dane policko cielom 
+
+			node_current[4] = predposledne[0]  # daco zle robi s poslednym, ta toto by to malo fixnut
+
 			closed.append(node_current)
 
 			break
+
+		predposledne = node_current
 
 		seqX = [+1, +0, -1, +0]
 		seqY = [+0, +1, +0, -1]
