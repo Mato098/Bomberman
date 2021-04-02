@@ -384,8 +384,11 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 				node_current = i
 
 		if node_current[0] == goal:  # ak je dane policko cielom
+			try:
+				node_current[4] = predposledne[0]  # daco zle robi s poslednym, ta toto by to malo fixnut
+			except:
+				print('pathfinding error')
 
-			node_current[4] = predposledne[0]  # daco zle robi s poslednym, ta toto by to malo fixnut
 
 			closed.append(node_current)
 			break

@@ -32,10 +32,14 @@ wallImg = Image.open('other_textures/wall2.png')
 wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
 wallImg = ImageTk.PhotoImage(wallImg)
 
+colors = ['color2', 'color3', 'color4', 'color5', 'color6']
 player1color = 'color1'
-player2color = 'color2'
-player3color = 'color3'
-player4color = 'color4'
+player2color = random.choice(colors)  # random farby pre vsetky AI
+colors.pop(colors.index(player2color))
+player3color = random.choice(colors)
+colors.pop(colors.index(player3color))
+player4color = random.choice(colors)
+colors.pop(colors.index(player4color))
 
 subor = open('sound/settings.txt', 'r')
 for i in subor:
@@ -1286,7 +1290,7 @@ def ai_powerup(aiObj, stats, powerupName, powerupObjj):
 		ai_stats.bombRangeFull = 'yes'
 
 	if powerupName == 'vestImg':
-		ai_stats.vest = 'yes'
+		#ai_stats.vest = 'yes'  # buguju sa ked maju vestu
 		ai_stats.vestStartTime = time.time()
 
 	if powerupName == 'piercingImg':
@@ -1743,7 +1747,6 @@ while gamestate == 'playing':
 			if (ai3_stats.path != 'none') and (ai3_stats.dead != True):
 				ai_move(ai3, ai3_stats, ai3Sprites, ai3_anim_counter, 'ai3')
 				ai3_anim_time = time.time()
-				print('anim ai3')
 			else:
 					update_stats_coords(ai3_stats, ai3)
 					update_stats_coords(PlayerPowerups, player)
