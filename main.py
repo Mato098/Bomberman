@@ -54,7 +54,7 @@ if sound_settings:
 bomb_place_sound = mixer.Sound('sound/bomb_place.wav')
 explosion_sound = mixer.Sound('sound/explosion.wav')
 death_sound = mixer.Sound('sound/death.wav')
-
+victory_sound = mixer.Sound('sound/victory.wav')
 
 
 playerSprites = []
@@ -1766,6 +1766,7 @@ if gamestate == 'lost':
 	platno.update()
 
 elif gamestate == 'won':
+	mixer.Sound.play(victory_sound)
 	game_won = Image.open('other_textures/victory_screen.png')
 	game_won = ImageTk.PhotoImage(game_won)
 	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
