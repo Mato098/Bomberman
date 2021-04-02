@@ -102,8 +102,6 @@ def click(event):
 			sound_image = platno.create_image(50, 50, image=sound_off)
 
 
-
-
 def koniec(event):
 	exit()
 

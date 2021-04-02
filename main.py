@@ -1136,15 +1136,17 @@ def ai_move(aiObj, stats, sprites, animcounter, aiName):
 
 def ai_anim(aiObj, smer, sprites, counter, aiName):
 	if aiName == 'ai1':
-		global ai1_anim_counter
+		global ai1_anim_counter, ai1_animSpeedRegulator
+		speedRegulator = ai1_animSpeedRegulator
 	elif aiName == 'ai2':
-		global ai2_anim_counter
+		global ai2_anim_counter, ai2_animSpeedRegulator
+		speedRegulator = ai2_animSpeedRegulator
 	elif aiName == 'ai3':
-		global ai3_anim_counter
-	global player_animSpeedRegulator
+		global ai3_anim_counter, ai3_animSpeedRegulator
+		speedRegulator = ai3_animSpeedRegulator
 
 	if smer == 'up':
-		if player_animSpeedRegulator == 10:
+		if speedRegulator == 10:
 
 			if counter >= 4:
 				counter = 0
@@ -1163,11 +1165,11 @@ def ai_anim(aiObj, smer, sprites, counter, aiName):
 			except:
 				pass
 			platno.update()
-			player_animSpeedRegulator = 0
+			speedRegulator = 0
 		else:
-			player_animSpeedRegulator += 1
+			speedRegulator += 1
 	if smer == 'down':
-		if player_animSpeedRegulator == 10:
+		if speedRegulator == 10:
 			if (counter < 8) or (counter > 11):
 				counter = 8
 			platno.itemconfig(aiObj, image=sprites[counter])
@@ -1184,11 +1186,11 @@ def ai_anim(aiObj, smer, sprites, counter, aiName):
 			except:
 				pass
 			platno.update()
-			player_animSpeedRegulator = 0
+			speedRegulator = 0
 		else:
-			player_animSpeedRegulator += 1
+			speedRegulator += 1
 	if smer == 'right':
-		if player_animSpeedRegulator == 10:
+		if speedRegulator == 10:
 			if (counter < 4) or (counter > 7):
 				counter = 4
 			platno.itemconfig(aiObj, image=sprites[counter])
@@ -1205,11 +1207,11 @@ def ai_anim(aiObj, smer, sprites, counter, aiName):
 			except:
 				pass
 			platno.update()
-			player_animSpeedRegulator = 0
+			speedRegulator = 0
 		else:
-			player_animSpeedRegulator += 1
+			speedRegulator += 1
 	if smer == 'left':
-		if player_animSpeedRegulator == 10:
+		if speedRegulator == 10:
 			if (counter < 12) or (counter > 15):
 				counter = 12
 			platno.itemconfig(aiObj, image=sprites[counter])
@@ -1226,9 +1228,21 @@ def ai_anim(aiObj, smer, sprites, counter, aiName):
 			except:
 				pass
 			platno.update()
-			player_animSpeedRegulator = 0
+			speedRegulator = 0
 		else:
-			player_animSpeedRegulator += 1
+			speedRegulator += 1
+	try:
+		ai1_animSpeedRegulator = speedRegulator
+	except:
+		pass
+	try:
+		ai2_animSpeedRegulator = speedRegulator
+	except:
+		pass
+	try:
+		ai3_animSpeedRegulator = speedRegulator
+	except:
+		pass
 
 
 def ai_powerup(aiObj, stats, powerupName, powerupObjj):
@@ -1332,6 +1346,8 @@ def update_powerup_board(stats):
 	if stats.bombRangeFull == 'yes':
 		a = platno.create_image(1170, 100 + offset, image=rangeFullImg)
 		stats.board_objects.append(a)
+
+
 def died(name):
 	if name == 'ai1':
 		mugShiet1 = platno.create_image(64 * 14 + 132, 128 * 2 - 47, image=dead)
@@ -1494,6 +1510,10 @@ playerRotation = 'up'
 oldRotation = 'up'
 playerAnimCounter = 0
 player_animSpeedRegulator = 0
+ai1_animSpeedRegulator = 0
+ai2_animSpeedRegulator = 0
+ai3_animSpeedRegulator = 0
+
 
 playerPlacedBombs = 0
 bombAnimCounter = 0

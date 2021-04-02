@@ -36,11 +36,10 @@ def decisionMaker(obstaclesmatrix, positionY, positionX, stats, playersZoznam):
 			for e in range(15):
 				obstaclesmatrix[i][e].aiSeen = 'no'
 
-		if stats.current_target_powerup_list == []:
+		if stats.current_target_powerup_list == []:  # ak nema ciel powrup, najde si ciel hraca
 			pathfinder_master(obstaclesmatrix, positionX, positionY, stats, 'player_search', playersZoznam)
 			stats.job = 'player'
 		elif stats.job == 'player':
-
 				move_podla_zoznamu(positionX, positionY, stats, obstaclesmatrix, 'powerup')
 
 		if stats.current_target_powerup_list == []:
@@ -389,7 +388,6 @@ def A_star(start, goal, matrix, purpose):  # start, goal = tuple - start[X, Y]
 			node_current[4] = predposledne[0]  # daco zle robi s poslednym, ta toto by to malo fixnut
 
 			closed.append(node_current)
-
 			break
 
 		predposledne = node_current
