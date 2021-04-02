@@ -3,7 +3,7 @@ Made as a school project
 
 ![snapshot](other_textures/sample.PNG)
 
-# Credits
+# Attributions
 
 Player sprites - Manalu Nakanishi (https://manalun.github.io/)
 
