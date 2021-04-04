@@ -1,0 +1,3 @@
+player
+color1
+wasd x

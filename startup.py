@@ -19,6 +19,8 @@ quit_normal = tkinter.PhotoImage(file='other_textures/quit_normal.png')
 quit_hover = tkinter.PhotoImage(file='other_textures/quit_hover.png')
 sound_on = tkinter.PhotoImage(file='other_textures/sound_on.png')
 sound_off = tkinter.PhotoImage(file='other_textures/sound_off.png')
+singleplayer = tkinter.PhotoImage(file='other_textures/singleplayer.png')
+multiplayer = tkinter.PhotoImage(file='other_textures/multiplayer.png')
 platno.create_image(64 * 15 / 2, 64 * 13 / 2, image=background)
 start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
 quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
@@ -55,22 +57,44 @@ def pohybMysi(event):
 		platno.delete(quit)
 		quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
 
-
+mode_selection = 0
 def click(event):
 	global  menu_tune
 	global  sound_settings
 	global sound_image
+	global mode_selection
 	if sound_settings:
 		mixer.Sound.play(click_sound)
 
 	x, y = event.x, event.y
-	if (240 < x < 720) and (420 < y < 480):  # start game
+	if (240 < x < 720) and (420 < y < 480):  # mode selection
+		sp = platno.create_image(64 * 15 / 2 - 100, 330, image=singleplayer)
+		mp = platno.create_image(64 * 15 / 2 + 100, 330, image=multiplayer)
+		mode_selection = 1
+
+	elif (64 * 15 / 2 - 200 < x < 64 * 15 / 2) and (280 < y < 380) and (mode_selection == 1):  # start singleplayer game
+		okenko.destroy()
+		if sound_settings:
+			mixer.music.stop()
+		import main  # launch game
+		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)
+
+	elif (64 * 15 / 2 < x < 64 * 15 / 2 + 200) and (280 < y < 380) and (mode_selection == 1):  # start multiplayer game
 		okenko.destroy()
 		if sound_settings:
 			mixer.music.stop()
 
-		import main  # launch game
+		import multiplayer_settings_menu
+
+		import main_multiplayer  # launch game
 		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)
+
+
+
+
+
+
+
 
 	elif (240 < x < 720) and (490 < y < 540):  # quit
 		exit()

@@ -1,0 +1,3 @@
+player
+color5
+arrows space
