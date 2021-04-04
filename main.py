@@ -225,6 +225,8 @@ class ai1_stats:
 	bombPlaced: int = 0  # pocet uz polozenych bomb
 	bombAmount: int = 1  # max pocet polozenych bomb
 	bombRange: int = 0
+	speedRegulator: int = 0
+	animCounter: int = 0
 	path: str = 'none'
 	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
 	bombRangeFull: str = 'no'
@@ -254,6 +256,8 @@ class ai2_stats:
 	bombPlaced: int = 0  # pocet uz polozenych bomb
 	bombAmount: int = 1  # max pocet polozenych bomb
 	bombRange: int = 0
+	speedRegulator: int = 0
+	animCounter: int = 0
 	path: str = 'none'
 	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
 	bombRangeFull: str = 'no'
@@ -283,6 +287,8 @@ class ai3_stats:
 	bombPlaced: int = 0  # pocet uz polozenych bomb
 	bombAmount: int = 1  # max pocet polozenych bomb
 	bombRange: int = 0
+	speedRegulator: int = 0
+	animCounter: int = 0
 	path: str = 'none'
 	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
 	bombRangeFull: str = 'no'
@@ -1109,7 +1115,7 @@ def ai_place_bomb(stats, aiObj):
 			mixer.Sound.play(bomb_place_sound)
 
 
-def ai_move(aiObj, stats, sprites, animcounter, aiName):
+def ai_move(aiObj, stats, sprites):
 	if stats.moving == False:
 		stats.startX = platno.coords(aiObj)[0]
 		stats.startY = platno.coords(aiObj)[1]
@@ -1125,128 +1131,57 @@ def ai_move(aiObj, stats, sprites, animcounter, aiName):
 		else:
 			if stats.path == 'up':  # sem pridat aj animacie
 				platno.coords(aiObj, platno.coords(aiObj)[0], platno.coords(aiObj)[1] - 3)
-				ai_anim(aiObj, stats.path, sprites, animcounter, aiName)
+				ai_anim(aiObj, stats, sprites)
 			elif stats.path == 'down':
 				platno.coords(aiObj, platno.coords(aiObj)[0], platno.coords(aiObj)[1] + 3)
-				ai_anim(aiObj, stats.path, sprites, animcounter, aiName)
+				ai_anim(aiObj, stats, sprites)
 			elif stats.path == 'right':
 				platno.coords(aiObj, platno.coords(aiObj)[0] + 3, platno.coords(aiObj)[1])
-				ai_anim(aiObj, stats.path, sprites, animcounter, aiName)
+				ai_anim(aiObj, stats, sprites)
 			elif stats.path == 'left':
 				platno.coords(aiObj, platno.coords(aiObj)[0] - 3, platno.coords(aiObj)[1])
-				ai_anim(aiObj, stats.path, sprites, animcounter, aiName)
+				ai_anim(aiObj, stats, sprites)
 			platno.update()
 
 
-def ai_anim(aiObj, smer, sprites, counter, aiName):
-	if aiName == 'ai1':
-		global ai1_anim_counter, ai1_animSpeedRegulator
-		speedRegulator = ai1_animSpeedRegulator
-	elif aiName == 'ai2':
-		global ai2_anim_counter, ai2_animSpeedRegulator
-		speedRegulator = ai2_animSpeedRegulator
-	elif aiName == 'ai3':
-		global ai3_anim_counter, ai3_animSpeedRegulator
-		speedRegulator = ai3_animSpeedRegulator
+def ai_anim(aiObj, stats, sprites):
+	if stats.path == 'up':
+		if stats.speedRegulator == 10:
+			if stats.animCounter >= 4:
+				stats.animCounter = 0
+			platno.itemconfig(aiObj, image=sprites[stats.animCounter])
+			stats.animCounter += 1
+			stats.speedRegulator = 0
+			platno.update()
 
-	if smer == 'up':
-		if speedRegulator == 10:
+	if stats.path == 'down':
+		if stats.speedRegulator == 10:
+			if (stats.animCounter < 8) or (stats.animCounter > 11):
+				stats.animCounter = 8
+			platno.itemconfig(aiObj, image=sprites[stats.animCounter])
+			stats.animCounter += 1
+			stats.speedRegulator = 0
+			platno.update()
 
-			if counter >= 4:
-				counter = 0
-			platno.itemconfig(aiObj, image=sprites[counter])
+	if stats.path == 'right':
+		if stats.speedRegulator == 10:
+			if (stats.animCounter < 4) or (stats.animCounter > 7):
+				stats.animCounter = 4
+			platno.itemconfig(aiObj, image=sprites[stats.animCounter])
+			stats.animCounter += 1
+			stats.speedRegulator = 0
+			platno.update()
 
-			try:
-				ai1_anim_counter = counter +  1
-			except:
-				pass
-			try:
-				ai2_anim_counter = counter +  1
-			except:
-				pass
-			try:
-				ai3_anim_counter = counter +  1
-			except:
-				pass
+	if stats.path == 'left':
+		if stats.speedRegulator == 10:
+			if (stats.animCounter < 12) or (stats.animCounter > 15):
+				stats.animCounter = 12
+			platno.itemconfig(aiObj, image=sprites[stats.animCounter])
+			stats.animCounter += 1
+			stats.speedRegulator = 0
 			platno.update()
-			speedRegulator = 0
-		else:
-			speedRegulator += 1
-	if smer == 'down':
-		if speedRegulator == 10:
-			if (counter < 8) or (counter > 11):
-				counter = 8
-			platno.itemconfig(aiObj, image=sprites[counter])
-			try:
-				ai1_anim_counter = counter + 1
-			except:
-				pass
-			try:
-				ai2_anim_counter = counter + 1
-			except:
-				pass
-			try:
-				ai3_anim_counter = counter + 1
-			except:
-				pass
-			platno.update()
-			speedRegulator = 0
-		else:
-			speedRegulator += 1
-	if smer == 'right':
-		if speedRegulator == 10:
-			if (counter < 4) or (counter > 7):
-				counter = 4
-			platno.itemconfig(aiObj, image=sprites[counter])
-			try:
-				ai1_anim_counter = counter + 1
-			except:
-				pass
-			try:
-				ai2_anim_counter = counter + 1
-			except:
-				pass
-			try:
-				ai3_anim_counter = counter + 1
-			except:
-				pass
-			platno.update()
-			speedRegulator = 0
-		else:
-			speedRegulator += 1
-	if smer == 'left':
-		if speedRegulator == 10:
-			if (counter < 12) or (counter > 15):
-				counter = 12
-			platno.itemconfig(aiObj, image=sprites[counter])
-			try:
-				ai1_anim_counter = counter + 1
-			except:
-				pass
-			try:
-				ai2_anim_counter = counter + 1
-			except:
-				pass
-			try:
-				ai3_anim_counter = counter + 1
-			except:
-				pass
-			platno.update()
-			speedRegulator = 0
-		else:
-			speedRegulator += 1
-	try:
-		ai1_animSpeedRegulator = speedRegulator
-	except:
-		pass
-	try:
-		ai2_animSpeedRegulator = speedRegulator
-	except:
-		pass
-	try:
-		ai3_animSpeedRegulator = speedRegulator
-	except:
-		pass
+
+	stats.speedRegulator += 1
 
 
 def ai_powerup(aiObj, stats, powerupName, powerupObjj):
@@ -1721,36 +1656,33 @@ while gamestate == 'playing':
 	if ai1_stats.dead != True:
 		if time.time() - ai1_anim_time > 0.01 - (ai1_stats.playerSpeed - 2) * 0.002:  # ai1 anim + movement
 			if (ai1_stats.path != 'none') and (ai3_stats.dead != True):
-				ai_move(ai1, ai1_stats, ai1Sprites, ai1_anim_counter, 'ai1')
+				ai_move(ai1, ai1_stats, ai1Sprites)
 				ai1_anim_time = time.time()
 			else:
 					update_stats_coords(ai1_stats, ai1)
 					update_stats_coords(PlayerPowerups, player)
-
 					aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai1)[1]) / 64)
 					                      , math.floor((platno.coords(ai1)[0]) / 64), ai1_stats, playersZoznam)
 					ai_place_bomb(ai1_stats, ai1)
 	if ai2_stats.dead != True:
 		if time.time() - ai2_anim_time > 0.01 - (ai2_stats.playerSpeed - 2) * 0.002:  # ai2 anim + movement
 			if (ai2_stats.path != 'none') and (ai3_stats.dead != True):
-				ai_move(ai2, ai2_stats, ai2Sprites, ai2_anim_counter, 'ai2')
+				ai_move(ai2, ai2_stats, ai2Sprites)
 				ai2_anim_time = time.time()
 			else:
 					update_stats_coords(ai2_stats, ai2)
 					update_stats_coords(PlayerPowerups, player)
-
 					aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai2)[1]) / 64)
 					                      , math.floor((platno.coords(ai2)[0]) / 64), ai2_stats, playersZoznam)
 					ai_place_bomb(ai2_stats, ai2)
 	if ai3_stats.dead != True:
 		if time.time() - ai3_anim_time > 0.01 - (ai3_stats.playerSpeed - 2) * 0.002:  # ai3 anim + movement
 			if (ai3_stats.path != 'none') and (ai3_stats.dead != True):
-				ai_move(ai3, ai3_stats, ai3Sprites, ai3_anim_counter, 'ai3')
+				ai_move(ai3, ai3_stats, ai3Sprites)
 				ai3_anim_time = time.time()
 			else:
 					update_stats_coords(ai3_stats, ai3)
 					update_stats_coords(PlayerPowerups, player)
-
 					aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(ai3)[1]) / 64)
 					                      , math.floor((platno.coords(ai3)[0]) / 64), ai3_stats, playersZoznam)
 					ai_place_bomb(ai3_stats, ai3)
