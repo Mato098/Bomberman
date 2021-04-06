@@ -206,307 +206,8 @@ class Policko(IntEnum):
 	expVlavoStred = 17
 	expVlavoKoniec = 18
 
-@dataclass
-class ai1_stats:
 
-	moving = False
-	vestStartTime: float = 0
-	startX: int = 0  # zaciatok pohybu o 1 policko
-	startY: int = 0
-	movingDirection: str = 'up'
-	placeBomb = False  # ci ma polozit bombu
-	bombPlaced: int = 0  # pocet uz polozenych bomb
-	bombAmount: int = 1  # max pocet polozenych bomb
-	bombRange: int = 0
-	speedRegulator: int = 0
-	animCounter: int = 0
-	path: str = 'none'
-	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	name: str = 'ai1'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	coords: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-
-	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
-	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
-a = ai1_stats()
-ai1_stats = a
-
-@dataclass
-class ai2_stats:
-
-	moving = False
-	vestStartTime: float = 0
-	startX: int = 0  # zaciatok pohybu o 1 policko
-	startY: int = 0
-	movingDirection: str = 'up'
-	placeBomb = False  # ci ma polozit bombu
-	bombPlaced: int = 0  # pocet uz polozenych bomb
-	bombAmount: int = 1  # max pocet polozenych bomb
-	bombRange: int = 0
-	speedRegulator: int = 0
-	animCounter: int = 0
-	path: str = 'none'
-	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	name: str = 'ai2'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	coords: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-
-	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
-	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
-a = ai2_stats()
-ai2_stats = a
-
-@dataclass
-class ai3_stats:
-
-	moving = False
-	vestStartTime: float = 0
-	startX: int = 0  # zaciatok pohybu o 1 policko
-	startY: int = 0
-	movingDirection: str = 'up'
-	placeBomb = False  # ci ma polozit bombu
-	bombPlaced: int = 0  # pocet uz polozenych bomb
-	bombAmount: int = 1  # max pocet polozenych bomb
-	bombRange: int = 0
-	speedRegulator: int = 0
-	animCounter: int = 0
-	path: str = 'none'
-	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	name: str = 'ai3'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	coords: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-
-	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
-	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
-a = ai3_stats()
-ai3_stats = a
-
-@dataclass
-class ai4_stats:
-
-	moving = False
-	vestStartTime: float = 0
-	startX: int = 0  # zaciatok pohybu o 1 policko
-	startY: int = 0
-	movingDirection: str = 'up'
-	placeBomb = False  # ci ma polozit bombu
-	bombPlaced: int = 0  # pocet uz polozenych bomb
-	bombAmount: int = 1  # max pocet polozenych bomb
-	bombRange: int = 0
-	speedRegulator: int = 0
-	animCounter: int = 0
-	path: str = 'none'
-	lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	name: str = 'ai4'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	coords: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-
-	current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
-	current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
-a = ai4_stats()
-ai4_stats = a
-
-#
-@dataclass
-class player1_stats:
-	vestStartTime: float = 0
-	bombAmount: int = 1
-	bombRange: int = 0
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	coords: List[str] = field(default_factory=list)
-	animCounter: int = 0
-	animSpeedRegulator: int = 0
-	t0: float = time.time()
-	strafeCounter: int = 0
-	rotation: str = 'up'
-	oldRotation: str = 'up'
-	name: str = 'player1'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	controls: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-a = player1_stats()
-player1_stats = a
-
-@dataclass
-class player2_stats:
-	vestStartTime: float = 0
-	bombAmount: int = 1
-	bombRange: int = 0
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	coords: List[str] = field(default_factory=list)
-	animCounter: int = 0
-	animSpeedRegulator: int = 0
-	t0: float = time.time()
-	strafeCounter: int = 0
-	rotation: str = 'up'
-	oldRotation: str = 'up'
-	name: str = 'player2'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	controls: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-a = player2_stats()
-player2_stats = a
-
-@dataclass
-class player3_stats:
-	vestStartTime: float = 0
-	bombAmount: int = 1
-	bombRange: int = 0
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	coords: List[str] = field(default_factory=list)
-	animCounter: int = 0
-	animSpeedRegulator: int = 0
-	t0: float = time.time()
-	strafeCounter: int = 0
-	rotation: str = 'up'
-	oldRotation: str = 'up'
-	name: str = 'player3'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	controls: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-a = player3_stats()
-player3_stats = a
-
-@dataclass
-class player4_stats:
-	vestStartTime: float = 0
-	bombAmount: int = 1
-	bombRange: int = 0
-	bombRangeFull: str = 'no'
-	playerSpeed: int = 2
-	vest: str = 'no'
-	piercing: str = 'no'
-	coords: List[str] = field(default_factory=list)
-	animCounter: int = 0
-	animSpeedRegulator: int = 0
-	t0: float = time.time()
-	strafeCounter: int = 0
-	rotation: str = 'up'
-	oldRotation: str = 'up'
-	name: str = 'player4'
-	job: str = 'none'
-	color: str = 'color1'
-	dead: bool = False
-	controls: List[str] = field(default_factory=list)
-	sprites: List[str] = field(default_factory=list)
-	board_objects: List[str] = field(default_factory=list)
-a = player4_stats()
-player4_stats = a
-
-slotsPlayers = [player1_stats, player2_stats, player3_stats, player4_stats]
-slotsAi = [ai1_stats, ai2_stats, ai3_stats, ai4_stats]
-playersList = []
-aiList = []
-# spracovanie nastaveni
-for i in range(4):
-	subor = open(f'multiplayer_settings/{i + 1}.txt', 'r')
-
-	entity = 'none yet'
-	for j in subor:
-		j = j.strip()
-		if j == 'player':
-			playersList.append(slotsPlayers[i])
-			entity = 'player'
-		elif j == 'ai':
-			aiList.append(slotsAi[i])
-			entity = 'ai'
-		elif j == 'empty':
-			break
-		if j[:-1] == 'color':
-			if entity == 'player':
-				playersList[-1].color = j
-			elif entity == 'ai':
-				aiList[-1].color = j
-		if entity == 'player':
-			if j == 'wasd x':
-				playersList[-1].controls = ['w', 'a', 's', 'd', 'x']
-			elif j == 'ijkl m':
-				playersList[-1].controls = ['i', 'j', 'k', 'l', 'm']
-			elif j == 'arrows space':
-				playersList[-1].controls = ['Up', 'Left', 'Down', 'Right', 'space']
-			elif j == '8456 0':
-				playersList[-1].controls = ['8', '4', '5', '6', '0']
-
-# nacitanie obrazkov pre hracov(tu a ne na zaciatku, lebo tu vie co a ako)
-for i in playersList:
-	player1Sprites = []
-	for j in range(10):
-		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile00{j}.png')
-		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
-		playerImg = ImageTk.PhotoImage(playerImg)
-		player1Sprites.append(playerImg)
-	for j in range(10, 16):
-		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile0{j}.png')
-		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
-		playerImg = ImageTk.PhotoImage(playerImg)
-		player1Sprites.append(playerImg)
-	i.sprites = player1Sprites
-for i in aiList:
-	player1Sprites = []
-	for j in range(10):
-		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile00{j}.png')
-		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
-		playerImg = ImageTk.PhotoImage(playerImg)
-		player1Sprites.append(playerImg)
-	for j in range(10, 16):
-		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile0{j}.png')
-		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
-		playerImg = ImageTk.PhotoImage(playerImg)
-		player1Sprites.append(playerImg)
-	i.sprites = player1Sprites
-
-
-def createClass():
+def createTile():
 	@dataclass
 	class Tile:
 
@@ -526,6 +227,81 @@ def createClass():
 		expCislo = 0  # nwm ci sa vobec pouziva
 		frame: int = 0  # exp frame
 	return Tile
+
+
+def createPlayer(name, color, controls):
+	@dataclass
+	class player_stats:
+		vestStartTime: float = 0
+		bombAmount: int = 1
+		bombRange: int = 0
+		bombPlaced: int = 0
+		bombRangeFull: str = 'no'
+		playerSpeed: int = 2
+		vest: str = 'no'
+		piercing: str = 'no'
+		coords: List[str] = field(default_factory=list)
+		animCounter: int = 0
+		animSpeedRegulator: int = 0
+		t0: float = time.time()
+		strafeCounter: int = 0
+		rotation: str = 'up'
+		oldRotation: str = 'up'
+		name: str = 'player1'
+		job: str = 'none'
+		color: str = 'color1'
+		dead: bool = False
+		controls: List[str] = field(default_factory=list)
+		sprites: List[str] = field(default_factory=list)
+		obj: List[str] = field(default_factory=list)
+		board_objects: List[str] = field(default_factory=list)
+	a = player_stats()
+	player_stats = a
+
+	player_stats.color = color
+	player_stats.name = name
+	player_stats.controls = controls
+	return player_stats
+
+
+def createAi(name, color):
+	@dataclass
+	class ai_stats:
+		moving = False
+		vestStartTime: float = 0
+		startX: int = 0  # zaciatok pohybu o 1 policko
+		startY: int = 0
+		movingDirection: str = 'up'
+		placeBomb = False  # ci ma polozit bombu
+		bombPlaced: int = 0  # pocet uz polozenych bomb
+		bombAmount: int = 1  # max pocet polozenych bomb
+		bombRange: int = 0
+		speedRegulator: int = 0
+		animCounter: int = 0
+		path: str = 'none'
+		lastPath = 'none'  # aby sa animacia zmenila hned co zmeni smer
+		bombRangeFull: str = 'no'
+		playerSpeed: int = 2
+		vest: str = 'no'
+		piercing: str = 'no'
+		name: str = 'ai4'
+		job: str = 'none'
+		color: str = 'color1'
+		dead: bool = False
+		coords: List[str] = field(default_factory=list)
+		board_objects: List[str] = field(default_factory=list)
+		sprites: List[str] = field(default_factory=list)
+		obj: List[str] = field(default_factory=list)
+
+		current_target_powerup_list: List[str] = field(default_factory=list)  # cely zoznam co A* vypluje
+		current_listXY: List[str] = field(default_factory=list)  # X, Y suradnice podla kt. sa orientuje v zozname^
+	a = ai_stats()
+	ai_stats = a
+
+	ai_stats.name = name
+	ai_stats.color = color
+
+	return ai_stats
 
 
 def playerAnim(playerObj, playerStats):
@@ -573,31 +349,32 @@ def playerAnim(playerObj, playerStats):
 
 
 def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je event??
-	global playerPlacedBombs
 
-	if playerPlacedBombs < playerStats.bombAmount:
-		x = math.floor(platno.coords(player1)[0] / 64)
-		y = math.floor((platno.coords(player1)[1] + 20) / 64)
-		if obstaclesMatrix[y][x].cislo != Policko.bomba:
-			if sound_settings:
-				mixer.Sound.play(bomb_place_sound)
+	for stats in allPlayersList:
+		if event.key == i.controls[4]:
+			if stats.bombPlaced < stats.bombAmount:
+				x = math.floor(platno.coords(stats.obj)[0] / 64)
+				y = math.floor((platno.coords(stats.obj)[1] + 20) / 64)
+				if obstaclesMatrix[y][x].cislo != Policko.bomba:
+					if sound_settings:
+						mixer.Sound.play(bomb_place_sound)
 
-			bomba = platno.create_image(x * 64 + 32, y * 64 + 32, image=bombSprites[0])
-			obstaclesMatrix[y][x].obj = bomba
-			obstaclesMatrix[y][x].cislo = Policko.bomba
-			obstaclesMatrix[y][x].bombRange = playerStats.bombRange
-			obstaclesMatrix[y][x].bombRangeFull = playerStats.bombRangeFull
-			obstaclesMatrix[y][x].bombParent = 'player1'
-			platno.tag_raise(player1)
-			playerPlacedBombs += 1
-			bombTimerBomb.append(bomba)
-			bombTimerTime.append(time.time())
+					bomba = platno.create_image(x * 64 + 32, y * 64 + 32, image=bombSprites[0])
+					obstaclesMatrix[y][x].obj = bomba
+					obstaclesMatrix[y][x].cislo = Policko.bomba
+					obstaclesMatrix[y][x].bombRange = stats.bombRange
+					obstaclesMatrix[y][x].bombRangeFull = stats.bombRangeFull
+					obstaclesMatrix[y][x].bombParent = stats.name
+					platno.tag_raise(stats.obj)
+					stats.bombPlaced += 1
+					bombTimerBomb.append(bomba)
+					bombTimerTime.append(time.time())
 
-			if playerStats.piercing == 'yes':
-				obstaclesMatrix[y][x].piercingBomb = 'yes'
+					if stats.piercing == 'yes':
+						obstaclesMatrix[y][x].piercingBomb = 'yes'
 
-			unwalkableBomb.append(math.floor((platno.coords(player1)[0]) / 64))
-			unwalkableBomb.append(math.floor((platno.coords(player1)[1]) / 64))
+					unwalkableBomb.append(math.floor((platno.coords(stats.obj)[0]) / 64))
+					unwalkableBomb.append(math.floor((platno.coords(stats.obj)[1]) / 64))
 
 
 def animBombs():
@@ -613,63 +390,33 @@ def animBombs():
 
 
 def checkBombs():
-	global bombTimerBomb, playerPlacedBombs, bombTimerTime
+	global bombTimerBomb, bombTimerTime
 	cas = time.time()
 	for f in range(len(bombTimerTime)):
 		if cas - bombTimerTime[f] > 2:
 			if bombTimerTime[f] != 0:
 				if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
 									[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombRangeFull == 'yes'):  # full ma full classic bez aj s piercingom
-
-					if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
-					[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'player1'):
-						playerPlacedBombs += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
-						ai1_stats.bombPlaced += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai2':
-						ai2_stats.bombPlaced += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai3':
-						ai3_stats.bombPlaced += -1
-
+					for stats in allPlayersList:
+						if stats.name == obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]\
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent:
+							stats.bombPlaced += -1
 					explosionFull_only_or_also_Piercing(bombTimerBomb[f])
+
 				elif (obstaclesMatrix[math.floor(platno.coords(bombTimerBomb[f])[1] / 64)]
 									[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].piercingBomb == 'yes'):  # piercing classic
-
-					if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
-					[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'player1'):
-						playerPlacedBombs += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
-						ai1_stats.bombPlaced += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai2':
-						ai2_stats.bombPlaced += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai3':
-						ai3_stats.bombPlaced += -1
-
+					for stats in allPlayersList:
+						if stats.name == obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]\
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent:
+							stats.bombPlaced += -1
 					explosionPiercing_only(bombTimerBomb[f])
+
 				else:  # classic
-
-					if (obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]
-					[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'player1'):
-						playerPlacedBombs += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai1':
-						ai1_stats.bombPlaced += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai2':
-						ai2_stats.bombPlaced += -1
-					elif obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)] \
-							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent == 'ai3':
-						ai3_stats.bombPlaced += -1
-
+					for stats in allPlayersList:
+						if stats.name == obstaclesMatrix[math.floor((platno.coords(bombTimerBomb[f])[1]) / 64)]\
+							[math.floor(platno.coords(bombTimerBomb[f])[0] / 64)].bombParent:
+							stats.bombPlaced += -1
 					explosionClassic(bombTimerBomb[f])
-
-
 
 				platno.delete(bombTimerBomb[f])
 				platno.update()
@@ -1228,45 +975,45 @@ def moveUp(playerObj):
 		platno.update()
 
 
-def powerup(name, obj):
-	platno.delete(obj)
+def powerup(powerupName, stats):
+	platno.delete(stats.obj)
 
-	if name == 'amountUpImg':
-		if playerStats.bombAmount < 5:
-			playerStats.bombAmount += 1
-	if name == 'amountDownImg':
-		if playerStats.bombAmount >= 2:
-			playerStats.bombAmount += -1
-	if name == 'amountFullImg':
-		playerStats.bombAmount = 5
+	if powerupName == 'amountUpImg':
+		if stats.bombAmount < 5:
+			stats.bombAmount += 1
+	if powerupName == 'amountDownImg':
+		if stats.bombAmount >= 2:
+			stats.bombAmount += -1
+	if powerupName == 'amountFullImg':
+		stats.bombAmount = 5
 
-	if name == 'speedUpImg':
-		if playerStats.playerSpeed < 5:
-			playerStats.playerSpeed += 1
-	if name == 'speedDownImg':
-		if playerStats.playerSpeed > 0:
-			playerStats.playerSpeed += -1
+	if powerupName == 'speedUpImg':
+		if stats.playerSpeed < 5:
+			stats.playerSpeed += 1
+	if powerupName == 'speedDownImg':
+		if stats.playerSpeed > 0:
+			stats.playerSpeed += -1
 
-	if name == 'rangeUpImg':
-		if playerStats.bombRange < 4:
-			playerStats.bombRange += 1
-	if name == 'rangeDownImg':
-		if playerStats.bombRange > 1:
-			if playerStats.bombRangeFull == 'yes':
-				playerStats.bombRangeFull = 'no'
+	if powerupName == 'rangeUpImg':
+		if stats.bombRange < 4:
+			stats.bombRange += 1
+	if powerupName == 'rangeDownImg':
+		if stats.bombRange > 1:
+			if stats.bombRangeFull == 'yes':
+				stats.bombRangeFull = 'no'
 			else:
-				playerStats.bombRange += -1
+				stats.bombRange += -1
 
-	if name == 'rangeFullImg':
-		playerStats.bombRangeFull = 'yes'
+	if powerupName == 'rangeFullImg':
+		stats.bombRangeFull = 'yes'
 
-	if name == 'vestImg':
-		playerStats.vest = 'yes'
-		playerStats.vestStartTime = time.time()
+	if powerupName == 'vestImg':
+		stats.vest = 'yes'
+		stats.vestStartTime = time.time()
 
-	if name == 'piercingImg':
-		playerStats.piercing = 'yes'
-	update_powerup_board(playerStats)
+	if powerupName == 'piercingImg':
+		stats.piercing = 'yes'
+	update_powerup_board(stats)
 
 
 def ai_place_bomb(stats, aiObj):
@@ -1303,8 +1050,9 @@ def ai_move(aiObj, stats, sprites):
 	elif stats.moving == True:
 		if (abs(platno.coords(aiObj)[0] - stats.startX) >= 64) or (abs(platno.coords(aiObj)[1] - stats.startY) >= 64):  # ak uz presiel 1 block
 			stats.moving = False
-			platno.coords(aiObj, math.floor(platno.coords(aiObj)[0] / 64) * 64 + 32, math.floor(platno.coords(aiObj)[1] / 64) * 64 + 16 )
-			  # ^snap to grid, lebo nechodi pekne po stvorcekoch
+			platno.coords(aiObj, math.floor(platno.coords(aiObj)[0] / 64) * 64 + 32,
+			              math.floor(platno.coords(aiObj)[1] / 64) * 64 + 16)
+			# ^snap to grid, lebo nechodi pekne po stvorcekoch
 
 			stats.path = 'none'
 
@@ -1364,14 +1112,8 @@ def ai_anim(aiObj, stats, sprites):
 	stats.speedRegulator += 1
 
 
-def ai_powerup(aiObj, stats, powerupName, powerupObjj):
+def ai_powerup(aiObj, ai_stats, powerupName, powerupObjj):
 	platno.delete(powerupObjj)
-	if stats.name == 'ai1':
-		ai_stats = ai1_stats
-	elif stats.name == 'ai2':
-		ai_stats = ai2_stats
-	elif stats.name == 'ai3':
-		ai_stats = ai3_stats
 
 	ai_stats.current_target_powerupXY = [None]
 
@@ -1411,7 +1153,7 @@ def ai_powerup(aiObj, stats, powerupName, powerupObjj):
 	if powerupName == 'piercingImg':
 		ai_stats.piercing = 'yes'
 
-	update_powerup_board(stats)
+	update_powerup_board(ai_stats)
 
 
 def cisloDebug(event):
@@ -1467,51 +1209,51 @@ def update_powerup_board(stats):
 		stats.board_objects.append(a)
 
 
-def playerInput(playerObj, playerStats):
+def playerInput(playerStats):
 	if keyboard.is_pressed(playerStats.controls[1]) and keyboard.is_pressed(playerStats.controls[0]):  # user input, najskor strafing
 		playerStats.rotation = 'left'
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:  # hore, dolava
 			if playerStats.strafeCounter % 2 == 0:
-				moveLeft(playerObj)
+				moveLeft(playerStats.obj)
 				playerStats.strafeCounter += 1
 			else:
-				moveUp(playerObj)
+				moveUp(playerStats.obj)
 				playerStats.strafeCounter += 1
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 	elif keyboard.is_pressed(playerStats.controls[1]) and keyboard.is_pressed(playerStats.controls[2]):  # dole, dolava
 		playerStats.rotation = 'left'
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			if playerStats.strafeCounter % 2 == 0:
-				moveLeft(playerObj)
+				moveLeft(playerStats.obj)
 				playerStats.strafeCounter += 1
 			else:
-				moveDown(playerObj)
+				moveDown(playerStats.obj)
 				playerStats.strafeCounter += 1
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 	elif keyboard.is_pressed(playerStats.controls[3]) and keyboard.is_pressed(playerStats.controls[2]):  # dole, doprava
 		playerStats.rotation = 'right'
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			if playerStats.strafeCounter % 2 == 0:
-				moveRight(playerObj)
+				moveRight(playerStats.obj)
 				playerStats.strafeCounter += 1
 			else:
-				moveDown(playerObj)
+				moveDown(playerStats.obj)
 				playerStats.strafeCounter += 1
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 	elif keyboard.is_pressed(playerStats.controls[0]) and keyboard.is_pressed(playerStats.controls[3]):  # hore, doprava
 		playerStats.rotation = 'right'
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			if playerStats.strafeCounter % 2 == 0:
-				moveRight(playerObj)
+				moveRight(playerStats.obj)
 				playerStats.strafeCounter += 1
 			else:
-				moveUp(playerObj)
+				moveUp(playerStats.obj)
 				playerStats.strafeCounter += 1
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 
 	elif keyboard.is_pressed(playerStats.controls[1]):
 		playerStats.oldRotation = playerStats.rotation
@@ -1519,37 +1261,36 @@ def playerInput(playerObj, playerStats):
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			if playerStats.oldRotation != playerStats.rotation:
 				playerStats.animSpeedRegulator = 10
-			moveLeft(playerObj)
+			moveLeft(playerStats.obj)
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 	elif keyboard.is_pressed(playerStats.controls[2]):
 		playerStats.oldRotation = playerStats.rotation
 		playerStats.rotation = 'down'
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			if playerStats.oldRotation != playerStats.rotation:
 				playerStats.animSpeedRegulator = 10
-			moveDown(playerObj)
+			moveDown(playerStats.obj)
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 	elif keyboard.is_pressed(playerStats.controls[3]):
 		playerStats.oldRotation = playerStats.rotation
 		playerStats.rotation = 'right'
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			if playerStats.oldRotation != playerStats.rotation:
 				playerStats.animSpeedRegulator = 10
-			moveRight(playerObj)
+			moveRight(playerStats.obj)
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
+			playerAnim(playerStats.obj, playerStats)
 	elif keyboard.is_pressed(playerStats.controls[0]):
 		playerStats.oldRotation = playerStats.rotation
 		if time.time() - playerStats.t0 > 0.01 - (playerStats.playerSpeed - 2) * 0.002:
 			playerStats.rotation = 'up'
 			if playerStats.oldRotation != playerStats.rotation:
 				playerStats.animSpeedRegulator = 10
-			moveUp(playerObj)
+			moveUp(playerStats.obj)
 			playerStats.t0 = time.time()
-			playerAnim(playerObj, playerStats)
-
+			playerAnim(playerStats.obj, playerStats)
 
 
 def died(name):
@@ -1563,6 +1304,82 @@ def died(name):
 		mugShiet3 = platno.create_image(64 * 14 + 132, 128 * 4 - 47, image=dead)
 		platno.update()
 
+
+allPlayersList = []
+
+# spracovanie nastaveni
+for i in range(4):
+	subor = open(f'multiplayer_settings/{i + 1}.txt', 'r')
+	entity = 'none yet'
+	for j in subor:
+		j = j.strip()
+		if j == 'player':
+			entity = 'player'
+		elif j == 'ai':
+			entity = 'ai'
+		elif j == 'empty':
+			break
+		if j[:-1] == 'color':
+			color = j
+		if entity == 'player':
+			if j == 'wasd x':
+				controls = ['w', 'a', 's', 'd', 'x']
+			elif j == 'ijkl m':
+				controls = ['i', 'j', 'k', 'l', 'm']
+			elif j == 'arrows space':
+				controls = ['Up', 'Left', 'Down', 'Right', 'space']
+			elif j == '8456 0':
+				controls = ['8', '4', '5', '6', '0']
+	if entity == 'player':
+		allPlayersList.append(createPlayer(f'player{i + 1}', color, controls))
+		platno.bind_all(f'<{controls[4]}>', placeBomb)
+	elif entity == 'ai':
+		allPlayersList.append(createPlayer(f'player{i + 1}', color, None))
+	subor.close()
+
+# nacitanie obrazkov pre hracov(tu a ne na zaciatku, lebo tu vie co a ako)
+for i in allPlayersList:
+	player1Sprites = []
+	for j in range(10):
+		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile00{j}.png')
+		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
+		playerImg = ImageTk.PhotoImage(playerImg)
+		player1Sprites.append(playerImg)
+	for j in range(10, 16):
+		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile0{j}.png')
+		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
+		playerImg = ImageTk.PhotoImage(playerImg)
+		player1Sprites.append(playerImg)
+	i.sprites = player1Sprites
+
+	# vytvaranie hracov(obrazkov)
+playersZoznam = []
+for i in range(len(allPlayersList)):
+	if i == 0:
+		player1 = platno.create_image(150, 80, image=allPlayersList[i].sprites[0])
+		playersZoznam.append([player1, allPlayersList[i]])
+		update_stats_coords(allPlayersList[i], player1)
+		allPlayersList[i].obj = player1
+	elif i == 1:
+		player2 = platno.create_image(14 * 64 - 32, 80, image=allPlayersList[i].sprites[0])
+		playersZoznam.append([player2, allPlayersList[i]])
+		update_stats_coords(allPlayersList[i], player2)
+		allPlayersList[i].obj = player2
+	elif i == 2:
+		player3 = platno.create_image(14 * 64 - 32, 80 + 64 * 10, image=allPlayersList[i].sprites[0])
+		playersZoznam.append([player3, allPlayersList[i]])
+		update_stats_coords(allPlayersList[i], player3)
+		allPlayersList[i].obj = player3
+	elif i == 3:
+		player4 = platno.create_image(2 * 64 - 32, 80 + 64 * 10, image=allPlayersList[i].sprites[0])
+		playersZoznam.append([player4, allPlayersList[i]])
+		update_stats_coords(allPlayersList[i], player4)
+		allPlayersList[i].obj = player4
+
+for i in allPlayersList:
+	update_powerup_board(i)
+	# allPlayersList = zoznam statov vsetkych hracov(aj AI), playerZoznam = posuva sa to len pre aiLogic
+	# koniec init hracov
 
 obstaclesMatrix = [  # 1 = obstacle, 0 = crate, 2 = free, 3 = bomba
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # walls
@@ -1599,7 +1416,7 @@ for i in range(13):  # kreslenie podlahy, krabic, power-up-ov, stavanie hracej p
 	premenna = 0
 	for e in range(15):
 
-		obstaclesMatrix[i][e] = createClass()
+		obstaclesMatrix[i][e] = createTile()
 		obstaclesMatrix[i][e].cislo = reeeeeeferenceMatrix[i][e]
 		if int(reeeeeeferenceMatrix[i][e]) % 2 == 0:
 			platno.create_image(premenna * 64 + 32, i * 64 + 32, image=background)
@@ -1629,51 +1446,6 @@ for i in range(13):  # kreslenie podlahy, krabic, power-up-ov, stavanie hracej p
 		platno.update()
 		premenna += 1
 
-	# hraci a ich staty, zoznam init
-
-playersZoznam = []
-for i in range(len(playersList)):
-	if i == 0:
-		player1 = platno.create_image(150, 80, image=playersList[i].sprites[0])
-		playersZoznam.append([player1, player1_stats])
-		update_stats_coords(player1_stats, player1)
-	elif i == 1:
-		player2 = platno.create_image(14 * 64 - 32, 80, image=playersList[i].sprites[0])
-		playersZoznam.append([player2, player2_stats])
-		update_stats_coords(player2_stats, player2)
-	elif i == 2:
-		player3 = platno.create_image(14 * 64 - 32, 80 + 64 * 10, image=playersList[i].sprites[0])
-		playersZoznam.append([player3, player3_stats])
-		update_stats_coords(player3_stats, player3)
-	elif i == 3:
-		player4 = platno.create_image(2 * 64 - 32, 80 + 64 * 10, image=playersList[i].sprites[0])
-		playersZoznam.append([player4, player4_stats])
-		update_stats_coords(player4_stats, player4)
-for i in range(len(playersList), len(aiList) + 1):
-	if i == 0:
-		ai1 = platno.create_image(150, 80, image=aiList[i].sprites[0])
-		playersZoznam.append([ai1, ai1_stats])
-		update_stats_coords(ai1_stats, ai1)
-	elif i == 1 :
-		ai2 = platno.create_image(14 * 64 - 32, 80, image=aiList[i].sprites[0])
-		playersZoznam.append([ai2, ai2_stats])
-		update_stats_coords(ai2_stats, ai2)
-	elif i == 2:
-		ai3 = platno.create_image(14 * 64 - 32, 80 + 64 * 10, image=aiList[i].sprites[0])
-		playersZoznam.append([ai3, ai3_stats])
-		update_stats_coords(ai3_stats, ai3)
-	elif i == 3:
-		ai4 = platno.create_image(2 * 64 - 32, 80 + 64 * 10, image=aiList[i].sprites[0])
-		playersZoznam.append([ai4, ai4_stats])
-		update_stats_coords(ai4_stats, ai4)
-	# playersList = zoznam statov vsetkych hracov(ludi), playerZoznam = posuva sa to len aiLogic
-
-	# koniec init hracov
-
-update_powerup_board(player1_stats)
-update_powerup_board(ai1_stats)
-update_powerup_board(ai2_stats)
-update_powerup_board(ai3_stats)
 
 t0 = time.time()  # cas na animaciu hraca
 ai1_anim_time = time.time()
@@ -1691,7 +1463,7 @@ tBombs = time.time()
 explosionImgTracking = []
 unwalkableBomb = []
 
-platno.bind_all('<space>', placeBomb)
+
 platno.bind_all('<Button-1>', cisloDebug)
 
 
@@ -1700,16 +1472,17 @@ platno.bind_all('<Button-1>', cisloDebug)
 gamestate = 'playing'
 strafecounter = 0  # player strafe movement TODO dat pohyb registrovanie atd. ako funkciu
 while gamestate == 'playing':
-	for i in playersList:
-		playerInput()  #TODO poslat nejako playerObj
+	for i in allPlayersList:
+		playerInput(i)
+
 	if keyboard.is_pressed('Escape'):
 		exit()
 
-	if (playerPlacedBombs != 0) or (ai1_stats.bombPlaced != 0) or\
-		(ai2_stats.bombPlaced != 0) or (ai3_stats.bombPlaced != 0):
-		if time.time() - tBombs > 0.1:  # bomb anim speed regulator
-			animBombs()
-			tBombs = time.time()
+	for i in allPlayersList:  # ak je nejaka bomba polozena -> anim
+		if i.bombPlaced != 0:
+			if time.time() - tBombs > 0.1:  # bomb anim speed regulator
+				animBombs()
+				tBombs = time.time()
 
 	checkBombs()
 
@@ -1721,38 +1494,28 @@ while gamestate == 'playing':
 						animExplosions(e, i)
 						tExplosion = time.time()
 
-	if len(unwalkableBomb) != 0:
-		if (unwalkableBomb[0] != (math.floor((platno.coords(player1)[0]) / 64))) \
-				or (unwalkableBomb[1] != (math.floor((platno.coords(player1)[1]) / 64))):
-			obstaclesMatrix[int(unwalkableBomb[1])][int(unwalkableBomb[0])].walkable = 'no'
-			unwalkableBomb = []
 
-	# ---------skapacie mechaniky
-	if obstaclesMatrix[math.floor((platno.coords(player1)[1]) / 64)][math.floor((platno.coords(player1)[0]) / 64)].tileName == 'explosion':
-		if player1_stats.vest == 'no':
-			gamestate = 'lost'
-	if ai1_stats.dead != True:
-		if obstaclesMatrix[ai1_stats.coords[0]][ai1_stats.coords[1]].tileName == 'explosion':
-			if ai1_stats.vest == 'no':  # skapal
-				print('AI1 SKAPAL')
-				platno.delete(ai1)
-				ai1_stats.dead = True
-				died('ai1')
-	if ai2_stats.dead != True:
-		if obstaclesMatrix[ai2_stats.coords[0]][ai2_stats.coords[1]].tileName == 'explosion':
-			if ai2_stats.vest == 'no':  # skapal
-				print('AI2 SKAPAL')
-				platno.delete(ai2)
-				ai2_stats.dead = True
-				died('ai2')
-	if ai3_stats.dead != True:
-		if obstaclesMatrix[ai3_stats.coords[0]][ai3_stats.coords[1]].tileName == 'explosion':
-			if ai3_stats.vest == 'no':  # skapal
-				print('AI3 SKAPAL')
-				platno.delete(ai3)
-				ai3_stats.dead = True
-				died('ai3')
-	# --------koniec skapacich mechanik
+	for i in unwalkableBomb:
+		solidify = 0
+		for j in allPlayersList:
+			if (i[0] != (math.floor((platno.coords(j)[0]) / 64))) or \
+			(i[1] != (math.floor((platno.coords(j)[1]) / 64))):
+				solidify += 1
+		if solidify > 0:
+			obstaclesMatrix[int(unwalkableBomb[1])][int(unwalkableBomb[0])].walkable = 'no'
+#	if len(unwalkableBomb) != 0:   #toto nadtym multiplayer fix??
+#		if (unwalkableBomb[0] != (math.floor((platno.coords(player1)[0]) / 64))) \
+#				or (unwalkableBomb[1] != (math.floor((platno.coords(player1)[1]) / 64))):
+#			obstaclesMatrix[int(unwalkableBomb[1])][int(unwalkableBomb[0])].walkable = 'no'
+#			unwalkableBomb = []
+
+	for i in allPlayersList:
+		if obstaclesMatrix[i.coords[0]][i.coords[1]].tileName == 'explosion':
+			if i.vest == 'no':
+				print(i.name, ' skapal')
+				platno.delete(i.obj)
+				i.dead = True
+				died('ai1')  #TODO died(stats) pre vsetkych
 
 	if obstaclesMatrix[math.floor((platno.coords(player1)[1]) / 64)][math.floor((platno.coords(player1)[0]) / 64)].powerup != '':  # ak je tam nejaky powerup, ...
 		powerup(obstaclesMatrix[math.floor((platno.coords(player1)[1]) / 64)][math.floor((platno.coords(player1)[0]) / 64)].powerup,
