@@ -353,9 +353,12 @@ def playerAnim(playerObj, playerStats):
 
 
 def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je event??
-
+	print('place bomb A')
+	print(event.char)
 	for stats in allPlayersList:
+		print(i.controls[4])
 		if event.char == i.controls[4]:
+			print('place bomb B')
 			if stats.bombPlaced < stats.bombAmount:
 				x = math.floor(platno.coords(stats.obj)[0] / 64)
 				y = math.floor((platno.coords(stats.obj)[1] + 20) / 64)
