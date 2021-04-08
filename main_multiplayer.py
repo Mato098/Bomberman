@@ -356,8 +356,8 @@ def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je 
 	print('place bomb A')
 	print(event.char)
 	for stats in allPlayersList:
-		print(i.controls[4])
-		if event.char == i.controls[4]:
+		print(stats.controls[4])
+		if (event.char == stats.controls[4]) or (event.char == ' ' and stats.controls[4] == 'space'):
 			print('place bomb B')
 			if stats.bombPlaced < stats.bombAmount:
 				x = math.floor(platno.coords(stats.obj)[0] / 64)
@@ -379,9 +379,9 @@ def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je 
 
 					if stats.piercing == 'yes':
 						obstaclesMatrix[y][x].piercingBomb = 'yes'
+					a = [math.floor((platno.coords(stats.obj)[1]) / 64), math.floor((platno.coords(stats.obj)[0]) / 64)]
+					unwalkableBomb.append(a)
 
-					unwalkableBomb.append(math.floor((platno.coords(stats.obj)[0]) / 64))
-					unwalkableBomb.append(math.floor((platno.coords(stats.obj)[1]) / 64))
 
 
 def animBombs():
@@ -1022,7 +1022,7 @@ def powerup(powerupName, stats):
 		stats.piercing = 'yes'
 	update_powerup_board(stats)
 
-
+#TODO unwalkable bomb fix? ak je tam daco zle
 def ai_place_bomb(stats, aiObj):
 	if stats.placeBomb == True:
 		stats.placeBomb = False
@@ -1456,14 +1456,17 @@ while gamestate == 'playing':
 						animExplosions(e, i)
 						tExplosion = time.time()
 
-	for i in unwalkableBomb:
-		solidify = 0
-		for j in allPlayersList:
-			if (i[0] != (math.floor((platno.coords(j)[0]) / 64))) or \
-			(i[1] != (math.floor((platno.coords(j)[1]) / 64))):
-				solidify += 1
-		if solidify > 0:
-			obstaclesMatrix[int(unwalkableBomb[1])][int(unwalkableBomb[0])].walkable = 'no'
+	if len(unwalkableBomb) > 0:
+		for i in unwalkableBomb:
+			standingOnBomb = 0
+			for j in allPlayersList:
+				if j.coords == i:
+					standingOnBomb += 1
+			if standingOnBomb > 0:
+				pass
+			else:
+				obstaclesMatrix[int(i[0])][int(i[1])].walkable = 'no'
+				unwalkableBomb.pop(unwalkableBomb.index(i))
 #	if len(unwalkableBomb) != 0:   #toto nadtym multiplayer fix??
 #		if (unwalkableBomb[0] != (math.floor((platno.coords(player1)[0]) / 64))) \
 #				or (unwalkableBomb[1] != (math.floor((platno.coords(player1)[1]) / 64))):

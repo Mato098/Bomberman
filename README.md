@@ -1,6 +1,17 @@
 # Bomberman
 Made as a school project
 
+Packages required:
+`keyboard`
+`pygame`
+`dataclasses`
+`Pillow`
+
+run by opening `startup.py`
+
+
+
+
 ![snapshot](other_textures/sample.PNG)
 
 # Attributions
