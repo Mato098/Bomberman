@@ -9,6 +9,8 @@ Packages required:
 
 run by opening `startup.py`
 
+game runs on fixed resolution 1236 x 832
+
 
 
 

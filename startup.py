@@ -72,14 +72,14 @@ def click(event):
 		mp = platno.create_image(64 * 15 / 2 + 100, 330, image=multiplayer)
 		mode_selection = 1
 
-	elif (64 * 15 / 2 - 200 < x < 64 * 15 / 2) and (280 < y < 380) and (mode_selection == 1):  # start singleplayer game
+	elif (64 * 15 / 2 - 200 < x < 64 * 15 / 2) and (240 < y < 430) and (mode_selection == 1):  # start singleplayer game
 		okenko.destroy()
 		if sound_settings:
 			mixer.music.stop()
 		import main  # launch game
 		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)
 
-	elif (64 * 15 / 2 < x < 64 * 15 / 2 + 200) and (280 < y < 380) and (mode_selection == 1):  # start multiplayer game
+	elif (64 * 15 / 2 < x < 64 * 15 / 2 + 200) and (240 < y < 430) and (mode_selection == 1):  # start multiplayer game
 		okenko.destroy()
 		if sound_settings:
 			mixer.music.stop()
