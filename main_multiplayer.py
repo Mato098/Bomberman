@@ -32,15 +32,6 @@ wallImg = Image.open('other_textures/wall2.png')
 wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
 wallImg = ImageTk.PhotoImage(wallImg)
 
-colors = ['color2', 'color3', 'color4', 'color5', 'color6']
-player1color = 'color1'
-player2color = random.choice(colors)  # random farby pre vsetky AI
-colors.pop(colors.index(player2color))
-player3color = random.choice(colors)
-colors.pop(colors.index(player3color))
-player4color = random.choice(colors)
-colors.pop(colors.index(player4color))
-
 subor = open('sound/settings.txt', 'r')
 for i in subor:
 	i.strip()
@@ -161,35 +152,6 @@ controls = ImageTk.PhotoImage(controls)
 controlsss = platno.create_image(64 * 15 + 145, 650, image=controls)
 
 
-for i in range(1, 5):
-	platno.create_image(64 * 15 + 138, 128 * i - 62, image=scoreImg)
-	if i == 1:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
-		platno.create_text(64 * 14 + 145, 128 * i - 103, text='Player', font='ArcadeClassic', fill='white')
-		fotka1 = Image.open(f'bomberman_sprites/{player1color}/tile010.png')
-		fotka1 = fotka1.crop([0, 0, 70, 84])
-		fotka1 = ImageTk.PhotoImage(fotka1)
-		mugshot1 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka1)
-	elif i == 2:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
-		platno.create_text(64 * 14 + 127, 128 * i - 103, text='AI 1', font='ArcadeClassic', fill='white')
-		fotka2 = Image.open(f'bomberman_sprites/{player2color}/tile010.png')
-		fotka2 = fotka2.crop([0, 0, 70, 84])
-		fotka2 = ImageTk.PhotoImage(fotka2)
-		mugshot2 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka2)
-	elif i == 3:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
-		platno.create_text(64 * 14 + 127, 128 * i - 103, text='AI 2', font='ArcadeClassic', fill='white')
-		fotka3 = Image.open(f'bomberman_sprites/{player3color}/tile010.png')
-		fotka3 = fotka3.crop([0, 0, 70, 84])
-		fotka3 = ImageTk.PhotoImage(fotka3)
-		mugshot3 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka3)
-	elif i == 4:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
-		platno.create_text(64 * 14 + 127, 128 * i - 103, text='AI 3', font='ArcadeClassic', fill='white')
-		fotka4 = Image.open(f'bomberman_sprites/{player4color}/tile010.png')
-		fotka4 = fotka4.crop([0, 0, 70, 84])
-		fotka4 = ImageTk.PhotoImage(fotka4)
-		mugshot4 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka4)
-	# ------tabulka init koniec
-
-
 class Policko(IntEnum):
 	krabica = 0
 	stena = 1
@@ -229,7 +191,7 @@ def createTile():
 	return Tile
 
 
-def createPlayer(name, color, controls):
+def createPlayer(name, color, controls, order):
 	@dataclass
 	class player_stats:
 		vestStartTime: float = 0
@@ -248,6 +210,7 @@ def createPlayer(name, color, controls):
 		strafeCounter: int = 0
 		rotation: str = 'up'
 		oldRotation: str = 'up'
+		leaderboardOrder: int = 0
 		name: str = 'player1'
 		job: str = 'none'
 		color: str = 'color1'
@@ -263,10 +226,11 @@ def createPlayer(name, color, controls):
 	player_stats.name = name
 	player_stats.controls = controls
 	player_stats.animTime = time.time()
+	player_stats.leaderboardOrder = order
 	return player_stats
 
 
-def createAi(name, color):
+def createAi(name, color, order):
 	@dataclass
 	class ai_stats:
 		moving = False
@@ -287,6 +251,7 @@ def createAi(name, color):
 		playerSpeed: int = 2
 		vest: str = 'no'
 		piercing: str = 'no'
+		leaderboardOrder: int = 0
 		name: str = 'ai4'
 		job: str = 'none'
 		color: str = 'color1'
@@ -304,6 +269,7 @@ def createAi(name, color):
 	ai_stats.name = name
 	ai_stats.color = color
 	ai_stats.animTime = time.time()
+	ai_stats.leaderboardOrder = order
 
 	return ai_stats
 
@@ -353,12 +319,10 @@ def playerAnim(playerObj, playerStats):
 
 
 def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je event??
-	print('place bomb A')
-	print(event.char)
 	for stats in allPlayersList:
-		print(stats.controls[4])
 		if (event.char == stats.controls[4]) or (event.char == ' ' and stats.controls[4] == 'space'):
-			print('place bomb B')
+			if stats.dead == True:
+				return
 			if stats.bombPlaced < stats.bombAmount:
 				x = math.floor(platno.coords(stats.obj)[0] / 64)
 				y = math.floor((platno.coords(stats.obj)[1] + 20) / 64)
@@ -381,7 +345,6 @@ def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je 
 						obstaclesMatrix[y][x].piercingBomb = 'yes'
 					a = [math.floor((platno.coords(stats.obj)[1]) / 64), math.floor((platno.coords(stats.obj)[0]) / 64)]
 					unwalkableBomb.append(a)
-
 
 
 def animBombs():
@@ -982,8 +945,8 @@ def moveUp(playerObj):
 		platno.update()
 
 
-def powerup(powerupName, stats):
-	platno.delete(stats.obj)
+def powerup(powerupName, powerupObj, stats):
+	platno.delete(powerupObj)
 
 	if powerupName == 'amountUpImg':
 		if stats.bombAmount < 5:
@@ -1134,13 +1097,13 @@ def update_stats_coords(stats, Obj):
   #TODO updaty lepsie urobit, + tabulku celu
 def update_powerup_board(stats):
 	offset = 0
-	if stats.name == 'player1':
+	if stats.leaderboardOrder == 0:
 		offset = 0
-	elif stats.name == 'ai1':
+	elif stats.leaderboardOrder == 1:
 		offset = 128
-	elif stats.name == 'ai2':
+	elif stats.leaderboardOrder == 2:
 		offset = 128 * 2
-	elif stats.name == 'ai3':
+	elif stats.leaderboardOrder == 3:
 		offset = 128 * 3
 
 	for i in stats.board_objects:
@@ -1256,14 +1219,19 @@ def playerInput(playerStats):
 			playerAnim(playerStats.obj, playerStats)
 
 
-def died(name):
-	if name == 'ai1':
+def died(stats):
+	print('update')
+	print(stats.leaderboardOrder)
+	if stats.leaderboardOrder == 0:
+		mugShiet4 = platno.create_image(64 * 14 + 132, 128 - 47, image=dead)
+		platno.update()
+	if stats.leaderboardOrder == 1:
 		mugShiet1 = platno.create_image(64 * 14 + 132, 128 * 2 - 47, image=dead)
 		platno.update()
-	if name == 'ai2':
+	if stats.leaderboardOrder == 2:
 		mugShiet2 = platno.create_image(64 * 14 + 132, 128 * 3 - 47, image=dead)
 		platno.update()
-	if name == 'ai3':
+	if stats.leaderboardOrder == 3:
 		mugShiet3 = platno.create_image(64 * 14 + 132, 128 * 4 - 47, image=dead)
 		platno.update()
 
@@ -1294,10 +1262,10 @@ for i in range(4):
 			elif j == '8456 0':
 				controls = ['8', '4', '5', '6', '0']
 	if entity == 'player':
-		allPlayersList.append(createPlayer(f'player{i + 1}', color, controls))
+		allPlayersList.append(createPlayer(f'player{i + 1}', color, controls, i))
 		platno.bind_all(f'<{controls[4]}>', placeBomb)
 	elif entity == 'ai':
-		allPlayersList.append(createPlayer(f'player{i + 1}', color, None))
+		allPlayersList.append(createPlayer(f'player{i + 1}', color, None, i))
 	subor.close()
 
 # nacitanie obrazkov pre hracov(tu a ne na zaciatku, lebo tu vie co a ako)
@@ -1338,6 +1306,36 @@ for i in range(len(allPlayersList)):
 		playersZoznam.append([player4, allPlayersList[i]])
 		update_stats_coords(allPlayersList[i], player4)
 		allPlayersList[i].obj = player4
+
+# tabulka
+for i in range(1, len(allPlayersList) + 1):
+	platno.create_image(64 * 15 + 138, 128 * i - 62, image=scoreImg)
+	if i == 1:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
+		fotka1 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka1 = fotka1.crop([0, 0, 70, 84])
+		fotka1 = ImageTk.PhotoImage(fotka1)
+		mugshot1 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka1)
+	elif i == 2:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
+		fotka2 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka2 = fotka2.crop([0, 0, 70, 84])
+		fotka2 = ImageTk.PhotoImage(fotka2)
+		mugshot2 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka2)
+	elif i == 3:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
+		fotka3 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka3 = fotka3.crop([0, 0, 70, 84])
+		fotka3 = ImageTk.PhotoImage(fotka3)
+		mugshot3 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka3)
+	elif i == 4:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
+		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
+		fotka4 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka4 = fotka4.crop([0, 0, 70, 84])
+		fotka4 = ImageTk.PhotoImage(fotka4)
+		mugshot4 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka4)
+	# ------tabulka init koniec
+
 
 for i in allPlayersList:
 	update_powerup_board(i)
@@ -1427,25 +1425,16 @@ unwalkableBomb = []
 
 
 platno.bind_all('<Button-1>', cisloDebug)
-
+deadBodies = []
 
 # mainloop
 
 gamestate = 'playing'
 strafecounter = 0  # player strafe movement TODO dat pohyb registrovanie atd. ako funkciu
 while gamestate == 'playing':
-	for i in allPlayersList:
-		playerInput(i)
 
 	if keyboard.is_pressed('Escape'):
 		exit()
-
-	for i in allPlayersList:  # ak je nejaka bomba polozena -> anim
-		if i.bombPlaced != 0:
-			if time.time() - tBombs > 0.1:  # bomb anim speed regulator
-				animBombs()
-				tBombs = time.time()
-
 	checkBombs()
 
 	if time.time() - tExplosion > 0.1:
@@ -1474,41 +1463,52 @@ while gamestate == 'playing':
 #			unwalkableBomb = []
 
 	for i in allPlayersList:
-		if obstaclesMatrix[i.coords[0]][i.coords[1]].tileName == 'explosion':
-			if i.vest == 'no':
-				print(i.name, ' skapal')
-				platno.delete(i.obj)
-				i.dead = True
-				died('ai1')  #TODO died(stats) pre vsetkych
-
-	for i in allPlayersList:
-		if obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][math.floor((platno.coords(i.obj)[0]) / 64)].powerup != '':  # ak je tam nejaky powerup, ...
-			powerup(obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][math.floor((platno.coords(i.obj)[0]) / 64)].powerup,
-		        obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][math.floor((platno.coords(i.obj)[0]) / 64)].powerupObj)
-			if i.name[:-1] == 'ai':
-				i.current_target_powerup_list = []
-				i.current_listXY = []
-			obstaclesMatrix[math.floor((platno.coords(i)[1]) / 64)][
-			math.floor((platno.coords(i)[0]) / 64)].powerup = ''
-
-	for i in allPlayersList:
-		if i.vest == 'yes':
-			if time.time() - i.vestStartTime > 5:
-				i.vest = 'no'
-				i.vestStartTime = 0
-
-	for i in allPlayersList:
 		if i.dead != True:
-			if time.time() - i.animTime > 0.01 - (i.playerSpeed - 2) * 0.002:  # anim + movement
-				update_stats_coords(i, i.obj)
+			playerInput(i)
+
+			if i.bombPlaced != 0:  # ak je nejaka bomba polozena -> anim
+				if time.time() - tBombs > 0.1:  # bomb anim speed regulator
+					animBombs()
+					tBombs = time.time()
+
+			if obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][math.floor((platno.coords(i.obj)[0]) / 64)].powerup != '':  # ak je tam nejaky powerup, ...
+				powerup(obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][math.floor((platno.coords(i.obj)[0]) / 64)].powerup,
+			        obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][math.floor((platno.coords(i.obj)[0]) / 64)].powerupObj, i)
 				if i.name[:-1] == 'ai':
-					if (i.path != 'none') and (i.dead != True):
-						ai_move(i.obj, i, i.sprites)
-						i.animTime = time.time()
-					else:
-						aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(i.obj)[1]) / 64)
-							                      , math.floor((platno.coords(i.obj)[0]) / 64), i, playersZoznam)
-						ai_place_bomb(i, i.obj)
+					i.current_target_powerup_list = []
+					i.current_listXY = []
+				obstaclesMatrix[math.floor((platno.coords(i.obj)[1]) / 64)][
+				math.floor((platno.coords(i.obj)[0]) / 64)].powerup = ''
+
+			if i.vest == 'yes':
+				if time.time() - i.vestStartTime > 5:
+					i.vest = 'no'
+					i.vestStartTime = 0
+
+			if i.dead != True:
+				if time.time() - i.animTime > 0.01 - (i.playerSpeed - 2) * 0.002:  # anim + movement
+					update_stats_coords(i, i.obj)
+					if i.name[:-1] == 'ai':
+						if (i.path != 'none') and (i.dead != True):
+							ai_move(i.obj, i, i.sprites)
+							i.animTime = time.time()
+						else:
+							aiLogic.decisionMaker(obstaclesMatrix, math.floor((platno.coords(i.obj)[1]) / 64)
+								                      , math.floor((platno.coords(i.obj)[0]) / 64), i, playersZoznam)
+							ai_place_bomb(i, i.obj)
+
+			if obstaclesMatrix[i.coords[0]][i.coords[1]].tileName == 'explosion':
+				if i.vest == 'no':
+					print(i.name, ' skapal')
+					aa = Image.open(f'bomberman_sprites/{i.color}/dead.png')
+					aa = aa.resize((44, 87), Image.ANTIALIAS)
+					aa = ImageTk.PhotoImage(aa)
+					a = platno.create_image(platno.coords(i.obj)[0], platno.coords(i.obj)[1], image=aa)
+					deadBodies.append([a, aa])
+					platno.delete(i.obj)
+					i.dead = True
+					died(i)  #TODO died(stats) pre vsetkych
+
 	platno.update()
 
 	aliveCounter = 0
@@ -1533,7 +1533,8 @@ if gamestate == 'draw':  # TODO draw screen
 	platno.update()
 
 elif gamestate == 'victory':  # TODO kto vyhral?
-	mixer.Sound.play(victory_sound)
+	if sound_settings:
+		mixer.Sound.play(victory_sound)
 	game_won = Image.open('other_textures/victory_screen.png')
 	game_won = ImageTk.PhotoImage(game_won)
 	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)

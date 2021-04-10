@@ -1703,7 +1703,8 @@ if gamestate == 'lost':
 	platno.update()
 
 elif gamestate == 'won':
-	mixer.Sound.play(victory_sound)
+	if sound_settings:
+		mixer.Sound.play(victory_sound)
 	game_won = Image.open('other_textures/victory_screen.png')
 	game_won = ImageTk.PhotoImage(game_won)
 	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
