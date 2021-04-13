@@ -32,6 +32,8 @@ Scoreboard sprites - Buch (https://opengameart.org/users/buch)
 
 Keyboard sprites - @Hyohnoo (https://hyohnoo.itch.io/)
 
+Draw screen - https://wall.alphacoders.com/big.php?i=572611
+
 Victory sound - Joshua Empyre (https://freesound.org/people/joshuaempyre/sounds/404024/)
 
 Main menu music - Joshua Empyre (https://freesound.org/people/joshuaempyre/sounds/251461/)

@@ -152,9 +152,9 @@ for i in range(3):
 divider = Image.open('other_textures/divider.png')
 divider = ImageTk.PhotoImage(divider)
 divajder = platno.create_image(64 * 15 + 10, 64 * 13 / 2, image=divider)  # pas medzi hracou plochou a statmi
-controls = Image.open('other_textures/controls.png')
-controls = ImageTk.PhotoImage(controls)
-controlsss = platno.create_image(64 * 15 + 145, 650, image=controls)
+controlss = Image.open('other_textures/controls.png')
+controlss = ImageTk.PhotoImage(controlss)
+controlsss = platno.create_image(64 * 15 + 145, 650, image=controlss)
 
 
 class Policko(IntEnum):
@@ -1274,6 +1274,10 @@ for i in range(4):
 	elif entity == 'ai':
 		allPlayersList.append(createAi(f'ai{i + 1}', color, i))
 	subor.close()
+# order overwrite...
+for i in range(len(allPlayersList)):
+	allPlayersList[i].leaderboardOrder = i
+
 
 # nacitanie obrazkov pre hracov(tu a ne na zaciatku, lebo tu vie co a ako)
 for i in allPlayersList:
