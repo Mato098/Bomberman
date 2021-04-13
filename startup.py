@@ -89,13 +89,6 @@ def click(event):
 		import main_multiplayer  # launch game
 		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)
 
-
-
-
-
-
-
-
 	elif (240 < x < 720) and (490 < y < 540):  # quit
 		exit()
 	elif (x < 100) and (y < 100):  # sound toggle

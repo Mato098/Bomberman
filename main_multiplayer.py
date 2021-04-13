@@ -320,6 +320,8 @@ def playerAnim(playerObj, playerStats):
 
 def placeBomb(event):  # AI bude mat svoju funkciu na davanie bomb lebo toto je event??
 	for stats in allPlayersList:
+		if stats.name[:-1] == 'ai':
+			return
 		if (event.char == stats.controls[4]) or (event.char == ' ' and stats.controls[4] == 'space'):
 			if stats.dead == True:
 				return
@@ -1005,8 +1007,8 @@ def ai_place_bomb(stats, aiObj):
 		if stats.piercing == 'yes':
 			obstaclesMatrix[aiY][aiX].piercingBomb = 'yes'
 
-		unwalkableBomb.append(aiX)
-		unwalkableBomb.append(aiY)
+		unwalkableBomb.append([aiY, aiX])
+		#unwalkableBomb.append(aiY)
 
 		if sound_settings:
 			mixer.Sound.play(bomb_place_sound)
@@ -1246,7 +1248,7 @@ for i in range(4):
 		j = j.strip()
 		if j == 'player':
 			entity = 'player'
-		elif j == 'ai':
+		elif j == 'CPU':
 			entity = 'ai'
 		elif j == 'empty':
 			break
@@ -1265,7 +1267,7 @@ for i in range(4):
 		allPlayersList.append(createPlayer(f'player{i + 1}', color, controls, i))
 		platno.bind_all(f'<{controls[4]}>', placeBomb)
 	elif entity == 'ai':
-		allPlayersList.append(createPlayer(f'player{i + 1}', color, None, i))
+		allPlayersList.append(createAi(f'ai{i + 1}', color, i))
 	subor.close()
 
 # nacitanie obrazkov pre hracov(tu a ne na zaciatku, lebo tu vie co a ako)
@@ -1464,7 +1466,8 @@ while gamestate == 'playing':
 
 	for i in allPlayersList:
 		if i.dead != True:
-			playerInput(i)
+			if i.name[:-1] != 'ai':
+				playerInput(i)
 
 			if i.bombPlaced != 0:  # ak je nejaka bomba polozena -> anim
 				if time.time() - tBombs > 0.1:  # bomb anim speed regulator

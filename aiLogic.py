@@ -172,8 +172,15 @@ def pathfinder_slave(obstaclesmatrix, aiX, aiY, stats, score, purpose, playersZo
 
 def check_for_targets(obstaclesmatrix, aiX, aiY, stats, playersZoznam):
 	for i in playersZoznam:
+		try:
+			if i.dead == True:
+				continue
+		except:
+			pass
+
 		targetX = i[1].coords[1]
 		targetY = i[1].coords[0]
+
 
 		placing = False  # ci na konci polozi bombu alebo ne
 
