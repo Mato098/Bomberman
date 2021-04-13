@@ -27,6 +27,11 @@ platno.grid(column=0, row=0)
 background = tkinter.PhotoImage(file='other_textures/bg64.png')
 crateImg = tkinter.PhotoImage(file='other_textures/crate64.png')
 
+subor = open('multiplayer_settings/mode.txt', 'r')
+for i in subor:
+	mode = i.strip()
+subor.close()
+
 
 wallImg = Image.open('other_textures/wall2.png')
 wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
@@ -1514,23 +1519,35 @@ while gamestate == 'playing':
 
 	platno.update()
 
-	aliveCounter = 0
-	for i in allPlayersList:
-		if i.dead == False:
-			aliveCounter += 1
-	if aliveCounter == 1:
-		gamestate = 'victory'
-	elif aliveCounter == 0:
-		gamestate = 'draw'
+	if mode == 'multiplayer':
+		aliveCounter = 0
+		for i in allPlayersList:
+			if i.dead == False:
+				aliveCounter += 1
+		if aliveCounter == 1:
+			gamestate = 'victory'
+		elif aliveCounter == 0:
+			gamestate = 'draw'
+	else:
+		if allPlayersList[0].dead == True:
+			gamestate = 'lose'
+		else:
+			aiDeadCounter = 0
+			for i in range(1, 4):
+				if allPlayersList[i].dead:
+					aiDeadCounter += 1
+			if aiDeadCounter == 3:
+				gamestate = 'win'
 
-
+time.sleep(0.5)
 if sound_settings:
 	mixer.music.stop()
 
+print(gamestate)
 if gamestate == 'draw':  # TODO draw screen
-	if sound_settings:
-		mixer.Sound.play(death_sound)
-	game_over = Image.open('other_textures/game_over.png')
+	if sound_settings:     # multiplayer
+		mixer.Sound.play(victory_sound)
+	game_over = Image.open('other_textures/draw.png')
 	game_over = ImageTk.PhotoImage(game_over)
 	g_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
 	platno.update()
@@ -1541,9 +1558,29 @@ elif gamestate == 'victory':  # TODO kto vyhral?
 	game_won = Image.open('other_textures/victory_screen.png')
 	game_won = ImageTk.PhotoImage(game_won)
 	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
+	for i in allPlayersList:
+		if i.dead == False:
+			winner_bg = platno.create_image(-35,  64 * 13 / 2, image=scoreImg)
+			winner = platno.create_image(50, 64 * 13 / 2, image=i.sprites[10])
+
+
+
 	platno.update()
 
+elif gamestate == 'win':  # singleplayer
+	if sound_settings:
+		mixer.Sound.play(victory_sound)
+	game_won = Image.open('other_textures/victory_screen.png')
+	game_won = ImageTk.PhotoImage(game_won)
+	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
+	platno.update()
+elif gamestate == 'lose':
+	if sound_settings:
+		mixer.Sound.play(death_sound)
+	game_over = Image.open('other_textures/game_over.png')
+	game_over = ImageTk.PhotoImage(game_over)
+	g_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
+	platno.update()
 
-time.sleep(0.5)
 keyboard.wait('Space')
 okno.destroy()

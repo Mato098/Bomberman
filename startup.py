@@ -1,6 +1,6 @@
 #! python3
 
-import tkinter
+import tkinter, random
 import os
 from pygame import mixer
 
@@ -25,6 +25,8 @@ platno.create_image(64 * 15 / 2, 64 * 13 / 2, image=background)
 start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
 quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
 platno.config(cursor='dotbox')
+
+colors = ['color2', 'color3', 'color4', 'color5', 'color6']
 
 subor = open('sound/settings.txt', 'r')
 for i in subor:
@@ -76,7 +78,28 @@ def click(event):
 		okenko.destroy()
 		if sound_settings:
 			mixer.music.stop()
-		import main  # launch game
+
+		for i in range(1, 5):
+			subor = open(f'multiplayer_settings/{i}.txt', 'w')
+			if i == 1:
+				print('asd')
+				subor.write('player\n')
+				subor.write('color1\n')
+				subor.write('wasd x\n')
+			elif i > 1:
+				aiColor = random.choice(colors)
+				colors.pop(colors.index(aiColor))
+
+				subor.write('CPU\n')
+				subor.write(f'{aiColor}\n')
+				subor.write('wasd x\n')
+			subor.close()
+		subor = open('multiplayer_settings/mode.txt', 'w')
+		subor.write('singleplayer')
+		subor.close()
+
+		#import main  # launch game
+		import main_multiplayer
 		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)
 
 	elif (64 * 15 / 2 < x < 64 * 15 / 2 + 200) and (240 < y < 430) and (mode_selection == 1):  # start multiplayer game
@@ -85,6 +108,10 @@ def click(event):
 			mixer.music.stop()
 
 		import multiplayer_settings_menu
+
+		subor = open('multiplayer_settings/mode.txt', 'w')
+		subor.write('multiplayer')
+		subor.close()
 
 		import main_multiplayer  # launch game
 		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)

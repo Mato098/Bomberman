@@ -7,7 +7,7 @@ Packages required:
 `dataclasses`
 `Pillow`
 
-run by opening `startup.py`
+start by running `startup.py`
 
 game runs on fixed resolution 1236 x 832
 
