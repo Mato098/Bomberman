@@ -3,6 +3,7 @@
 import copy
 import tkinter, math, time, keyboard, random
 from dataclasses import dataclass, field
+import os
 
 # to install PIL, install package 'pillow' instead
 from PIL import Image, ImageTk
@@ -12,6 +13,14 @@ from pygame import mixer  # zvuk
 
 import aiLogic
 
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 okno = tkinter.Tk()
@@ -24,8 +33,8 @@ vyska = 64 * 13  # 64*64
 
 platno = tkinter.Canvas(width=sirka, height=vyska)
 platno.grid(column=0, row=0)
-background = tkinter.PhotoImage(file='other_textures/bg64.png')
-crateImg = tkinter.PhotoImage(file='other_textures/crate64.png')
+background = tkinter.PhotoImage(file=resource_path('other_textures/bg64.png'))
+crateImg = tkinter.PhotoImage(file=resource_path('other_textures/crate64.png'))
 
 subor = open('multiplayer_settings/mode.txt', 'r')
 for i in subor:
@@ -33,11 +42,11 @@ for i in subor:
 subor.close()
 
 
-wallImg = Image.open('other_textures/wall2.png')
+wallImg = Image.open(resource_path('other_textures/wall2.png'))
 wallImg = wallImg.resize((64, 64), Image.ANTIALIAS)
 wallImg = ImageTk.PhotoImage(wallImg)
 
-subor = open('sound/settings.txt', 'r')
+subor = open(resource_path('sound/settings.txt'), 'r')
 for i in subor:
 	i.strip()
 	if i == 'on':
@@ -49,14 +58,14 @@ for i in subor:
 subor.close()
 
 mixer.init()
-mixer.music.load('sound/Decktonic_-_Night_Drive_(Strong Suit Remix).wav')
+mixer.music.load(resource_path('sound/Decktonic_-_Night_Drive_(Strong Suit Remix).wav'))
 if sound_settings:
 	mixer.music.play(-1)
 
-bomb_place_sound = mixer.Sound('sound/bomb_place.wav')
-explosion_sound = mixer.Sound('sound/explosion.wav')
-death_sound = mixer.Sound('sound/death.wav')
-victory_sound = mixer.Sound('sound/victory.wav')
+bomb_place_sound = mixer.Sound(resource_path('sound/bomb_place.wav'))
+explosion_sound = mixer.Sound(resource_path('sound/explosion.wav'))
+death_sound = mixer.Sound(resource_path('sound/death.wav'))
+victory_sound = mixer.Sound(resource_path('sound/victory.wav'))
 
 explosionSpritesUp = []
 explosionSpritesLeft = []
@@ -64,95 +73,95 @@ explosionSpritesDown = []
 explosionSpritesRight = []
 
 for i in range(10):
-	expImg = Image.open(f'explosion_sprites/tile00{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile00{i}.png'))
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesRight.append(expImg)
 
-	expImg = Image.open(f'explosion_sprites/tile00{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile00{i}.png'))
 	expImg = expImg.rotate(90)
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesUp.append(expImg)
 
-	expImg = Image.open(f'explosion_sprites/tile00{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile00{i}.png'))
 	expImg = expImg.rotate(180)
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesLeft.append(expImg)
 
-	expImg = Image.open(f'explosion_sprites/tile00{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile00{i}.png'))
 	expImg = expImg.rotate(-90)
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesDown.append(expImg)
 
 for i in range(10, 21):
-	expImg = Image.open(f'explosion_sprites/tile0{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile0{i}.png'))
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesRight.append(expImg)
 
-	expImg = Image.open(f'explosion_sprites/tile0{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile0{i}.png'))
 	expImg = expImg.rotate(90)
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesUp.append(expImg)
 
-	expImg = Image.open(f'explosion_sprites/tile0{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile0{i}.png'))
 	expImg = expImg.rotate(180)
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesLeft.append(expImg)
 
-	expImg = Image.open(f'explosion_sprites/tile0{i}.png')
+	expImg = Image.open(resource_path(f'explosion_sprites/tile0{i}.png'))
 	expImg = expImg.rotate(-90)
 	expImg = ImageTk.PhotoImage(expImg)
 	explosionSpritesDown.append(expImg)
 bombSprites = []
 for i in range(8):
-	bombImg = Image.open(f'bomb_sprites/tile00{i}.png')
+	bombImg = Image.open(resource_path(f'bomb_sprites/tile00{i}.png'))
 	bombImg = bombImg.resize((48, 48), Image.ANTIALIAS)
 	bombImg = ImageTk.PhotoImage(bombImg)
 	bombSprites.append(bombImg)
 
-amountUpImg = Image.open('other_textures/amount/plus.png')
+amountUpImg = Image.open(resource_path('other_textures/amount/plus.png'))
 amountUpImg = ImageTk.PhotoImage(amountUpImg)
-amountFullImg = Image.open('other_textures/amount/full.png')
+amountFullImg = Image.open(resource_path('other_textures/amount/full.png'))
 amountFullImg = ImageTk.PhotoImage(amountFullImg)
-amountDownImg = Image.open('other_textures/amount/down.png')
+amountDownImg = Image.open(resource_path('other_textures/amount/down.png'))
 amountDownImg = amountDownImg.resize((32, 32), Image.ANTIALIAS)
 amountDownImg = ImageTk.PhotoImage(amountDownImg)
 
-rangeUpImg = Image.open('other_textures/range/plus.png')
+rangeUpImg = Image.open(resource_path('other_textures/range/plus.png'))
 rangeUpImg = ImageTk.PhotoImage(rangeUpImg)
-rangeFullImg = Image.open('other_textures/range/full.png')
+rangeFullImg = Image.open(resource_path('other_textures/range/full.png'))
 rangeFullImg = ImageTk.PhotoImage(rangeFullImg)
-rangeDownImg = Image.open('other_textures/range/down.png')
+rangeDownImg = Image.open(resource_path('other_textures/range/down.png'))
 rangeDownImg = rangeDownImg.resize((32, 32), Image.ANTIALIAS)
 rangeDownImg = ImageTk.PhotoImage(rangeDownImg)
 
-speedUpImg = Image.open('other_textures/speed/plus.png')
+speedUpImg = Image.open(resource_path('other_textures/speed/plus.png'))
 speedUpImg = ImageTk.PhotoImage(speedUpImg)
-speedDownImg = Image.open('other_textures/speed/down.png')
+speedDownImg = Image.open(resource_path('other_textures/speed/down.png'))
 speedDownImg = ImageTk.PhotoImage(speedDownImg)
 
-vestImg = Image.open('other_textures/vest.png')
+vestImg = Image.open(resource_path('other_textures/vest.png'))
 vestImg = ImageTk.PhotoImage(vestImg)
 
-piercingImg = Image.open('other_textures/pierceBomb.png')
+piercingImg = Image.open(resource_path('other_textures/pierceBomb.png'))
 piercingImg = ImageTk.PhotoImage(piercingImg)
 
-dead = Image.open(f'other_textures/dead.png')
+dead = Image.open(resource_path(f'other_textures/dead.png'))
 dead = dead.resize((130, 130), Image.ANTIALIAS)
 dead = ImageTk.PhotoImage(dead)
 
 	# -------------tabulka a ten zbytok init
-scoreImg = Image.open('other_textures/banner.png')
+scoreImg = Image.open(resource_path('other_textures/banner.png'))
 scoreImg = ImageTk.PhotoImage(scoreImg)
-zelezo = Image.open('other_textures/metal.jpg')
+zelezo = Image.open(resource_path('other_textures/metal.jpg'))
 zelezo = ImageTk.PhotoImage(zelezo)
 zelezoZ = []
 for i in range(3):
 	zeeelezo = platno.create_image(64 * 15 + 138, (297 / 2) + 297 * i, image=zelezo)  # to na com su pomocky
 	zelezoZ.append(zeeelezo)
-divider = Image.open('other_textures/divider.png')
+divider = Image.open(resource_path('other_textures/divider.png'))
 divider = ImageTk.PhotoImage(divider)
 divajder = platno.create_image(64 * 15 + 10, 64 * 13 / 2, image=divider)  # pas medzi hracou plochou a statmi
-controlss = Image.open('other_textures/controls.png')
+controlss = Image.open(resource_path('other_textures/controls.png'))
 controlss = ImageTk.PhotoImage(controlss)
 controlsss = platno.create_image(64 * 15 + 145, 650, image=controlss)
 
@@ -277,6 +286,17 @@ def createAi(name, color, order):
 	ai_stats.leaderboardOrder = order
 
 	return ai_stats
+
+
+
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def playerAnim(playerObj, playerStats):
@@ -1247,7 +1267,7 @@ allPlayersList = []
 
 # spracovanie nastaveni
 for i in range(4):
-	subor = open(f'multiplayer_settings/{i + 1}.txt', 'r')
+	subor = open(resource_path(f'multiplayer_settings/{i + 1}.txt'), 'r')
 	entity = 'none yet'
 	for j in subor:
 		j = j.strip()
@@ -1283,12 +1303,12 @@ for i in range(len(allPlayersList)):
 for i in allPlayersList:
 	player1Sprites = []
 	for j in range(10):
-		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile00{j}.png')
+		playerImg = Image.open(resource_path(f'bomberman_sprites/{i.color}/tile00{j}.png'))
 		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
 		playerImg = ImageTk.PhotoImage(playerImg)
 		player1Sprites.append(playerImg)
 	for j in range(10, 16):
-		playerImg = Image.open(f'bomberman_sprites/{i.color}/tile0{j}.png')
+		playerImg = Image.open(resource_path(f'bomberman_sprites/{i.color}/tile0{j}.png'))
 		playerImg = playerImg.resize((44, 87), Image.ANTIALIAS)
 		playerImg = ImageTk.PhotoImage(playerImg)
 		player1Sprites.append(playerImg)
@@ -1323,25 +1343,25 @@ for i in range(1, len(allPlayersList) + 1):
 	platno.create_image(64 * 15 + 138, 128 * i - 62, image=scoreImg)
 	if i == 1:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
 		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
-		fotka1 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka1 = Image.open(resource_path(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png'))
 		fotka1 = fotka1.crop([0, 0, 70, 84])
 		fotka1 = ImageTk.PhotoImage(fotka1)
 		mugshot1 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka1)
 	elif i == 2:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
 		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
-		fotka2 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka2 = Image.open(resource_path(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png'))
 		fotka2 = fotka2.crop([0, 0, 70, 84])
 		fotka2 = ImageTk.PhotoImage(fotka2)
 		mugshot2 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka2)
 	elif i == 3:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
 		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
-		fotka3 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka3 = Image.open(resource_path(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png'))
 		fotka3 = fotka3.crop([0, 0, 70, 84])
 		fotka3 = ImageTk.PhotoImage(fotka3)
 		mugshot3 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka3)
 	elif i == 4:  # ak si zmenil meno, tu treba pridat moznost po menu zeby si napisal meno a dal farbu
 		platno.create_text(64 * 14 + 145, 128 * i - 103, text=allPlayersList[i - 1].name, font='ArcadeClassic', fill='white')
-		fotka4 = Image.open(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png')
+		fotka4 = Image.open(resource_path(f'bomberman_sprites/{allPlayersList[i - 1].color}/tile010.png'))
 		fotka4 = fotka4.crop([0, 0, 70, 84])
 		fotka4 = ImageTk.PhotoImage(fotka4)
 		mugshot4 = platno.create_image(64 * 14 + 132, 128 * i - 47, image=fotka4)
@@ -1512,7 +1532,7 @@ while gamestate == 'playing':
 			if obstaclesMatrix[i.coords[0]][i.coords[1]].tileName == 'explosion':
 				if i.vest == 'no':
 					print(i.name, ' skapal')
-					aa = Image.open(f'bomberman_sprites/{i.color}/dead.png')
+					aa = Image.open(resource_path(f'bomberman_sprites/{i.color}/dead.png'))
 					aa = aa.resize((44, 87), Image.ANTIALIAS)
 					aa = ImageTk.PhotoImage(aa)
 					a = platno.create_image(platno.coords(i.obj)[0], platno.coords(i.obj)[1], image=aa)
@@ -1551,7 +1571,7 @@ print(gamestate)
 if gamestate == 'draw':  # TODO draw screen
 	if sound_settings:     # multiplayer
 		mixer.Sound.play(victory_sound)
-	game_over = Image.open('other_textures/draw.png')
+	game_over = Image.open(resource_path('other_textures/draw.png'))
 	game_over = ImageTk.PhotoImage(game_over)
 	g_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
 	platno.update()
@@ -1559,7 +1579,7 @@ if gamestate == 'draw':  # TODO draw screen
 elif gamestate == 'victory':  # TODO kto vyhral?
 	if sound_settings:
 		mixer.Sound.play(victory_sound)
-	game_won = Image.open('other_textures/victory_screen.png')
+	game_won = Image.open(resource_path('other_textures/victory_screen.png'))
 	game_won = ImageTk.PhotoImage(game_won)
 	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
 	for i in allPlayersList:
@@ -1574,14 +1594,14 @@ elif gamestate == 'victory':  # TODO kto vyhral?
 elif gamestate == 'win':  # singleplayer
 	if sound_settings:
 		mixer.Sound.play(victory_sound)
-	game_won = Image.open('other_textures/victory_screen.png')
+	game_won = Image.open(resource_path('other_textures/victory_screen.png'))
 	game_won = ImageTk.PhotoImage(game_won)
 	g_won = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_won)
 	platno.update()
 elif gamestate == 'lose':
 	if sound_settings:
 		mixer.Sound.play(death_sound)
-	game_over = Image.open('other_textures/game_over.png')
+	game_over = Image.open(resource_path('other_textures/game_over.png'))
 	game_over = ImageTk.PhotoImage(game_over)
 	g_over = platno.create_image((64 * 15 + 276) / 2, 64 * 13 / 2, image=game_over)
 	platno.update()

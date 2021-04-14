@@ -4,6 +4,17 @@ import tkinter, random
 import os
 from pygame import mixer
 
+
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 okenko = tkinter.Tk()
 okenko.title('Bomberman')
 okenko.focus_force()
@@ -12,15 +23,16 @@ vyska = 64 * 13  # 64*64
 platno = tkinter.Canvas(width=sirka, height=vyska)
 platno.pack()
 
-background = tkinter.PhotoImage(file='other_textures/menu.png')
-start_normal = tkinter.PhotoImage(file='other_textures/start_game_normal.png')
-start_hover = tkinter.PhotoImage(file='other_textures/start_game_hover.png')
-quit_normal = tkinter.PhotoImage(file='other_textures/quit_normal.png')
-quit_hover = tkinter.PhotoImage(file='other_textures/quit_hover.png')
-sound_on = tkinter.PhotoImage(file='other_textures/sound_on.png')
-sound_off = tkinter.PhotoImage(file='other_textures/sound_off.png')
-singleplayer = tkinter.PhotoImage(file='other_textures/singleplayer.png')
-multiplayer = tkinter.PhotoImage(file='other_textures/multiplayer.png')
+backgrounasd = tkinter.PhotoImage(file=resource_path('other_textures/bg64.png'))
+background = tkinter.PhotoImage(file=resource_path('other_textures/menu.png'))
+start_normal = tkinter.PhotoImage(file=resource_path('other_textures/start_game_normal.png'))
+start_hover = tkinter.PhotoImage(file=resource_path('other_textures/start_game_hover.png'))
+quit_normal = tkinter.PhotoImage(file=resource_path('other_textures/quit_normal.png'))
+quit_hover = tkinter.PhotoImage(file=resource_path('other_textures/quit_hover.png'))
+sound_on = tkinter.PhotoImage(file=resource_path('other_textures/sound_on.png'))
+sound_off = tkinter.PhotoImage(file=resource_path('other_textures/sound_off.png'))
+singleplayer = tkinter.PhotoImage(file=resource_path('other_textures/singleplayer.png'))
+multiplayer = tkinter.PhotoImage(file=resource_path('other_textures/multiplayer.png'))
 platno.create_image(64 * 15 / 2, 64 * 13 / 2, image=background)
 start = platno.create_image(64 * 15 / 2, 450, image=start_normal)
 quit = platno.create_image(64 * 15 / 2, 520, image=quit_normal)
@@ -28,7 +40,7 @@ platno.config(cursor='dotbox')
 
 colors = ['color2', 'color3', 'color4', 'color5', 'color6']
 
-subor = open('sound/settings.txt', 'r')
+subor = open(resource_path('sound/settings.txt'), 'r')
 for i in subor:
 	i.strip()
 	if i == 'on':
@@ -80,7 +92,7 @@ def click(event):
 			mixer.music.stop()
 
 		for i in range(1, 5):
-			subor = open(f'multiplayer_settings/{i}.txt', 'w')
+			subor = open(resource_path(f'multiplayer_settings/{i}.txt'), 'w')
 			if i == 1:
 				print('asd')
 				subor.write('player\n')
@@ -94,7 +106,7 @@ def click(event):
 				subor.write(f'{aiColor}\n')
 				subor.write('wasd x\n')
 			subor.close()
-		subor = open('multiplayer_settings/mode.txt', 'w')
+		subor = open(resource_path('multiplayer_settings/mode.txt'), 'w')
 		subor.write('singleplayer')
 		subor.close()
 
@@ -109,7 +121,7 @@ def click(event):
 
 		import multiplayer_settings_menu
 
-		subor = open('multiplayer_settings/mode.txt', 'w')
+		subor = open(resource_path('multiplayer_settings/mode.txt'), 'w')
 		subor.write('multiplayer')
 		subor.close()
 
@@ -119,7 +131,7 @@ def click(event):
 	elif (240 < x < 720) and (490 < y < 540):  # quit
 		exit()
 	elif (x < 100) and (y < 100):  # sound toggle
-		subor = open('sound/settings.txt', 'r')
+		subor = open(resource_path('sound/settings.txt'), 'r')
 		for i in subor:
 			i.strip()
 			if i == 'on':
@@ -127,7 +139,7 @@ def click(event):
 			elif i == 'off':
 				sound_settings = False
 		subor.close()
-		subor = open('sound/settings.txt', 'w')
+		subor = open(resource_path('sound/settings.txt'), 'w')
 		if sound_settings == True:
 			subor.write('off')
 			sound_settings = False
@@ -151,11 +163,11 @@ def koniec(event):
 
 
 mixer.init()
-mixer.music.load('sound/menu_tune.wav')
+mixer.music.load(resource_path('sound/menu_tune.wav'))
 if sound_settings:
 	mixer.music.play(-1)
 
-click_sound = mixer.Sound('sound/menu_select.wav')
+click_sound = mixer.Sound(resource_path('sound/menu_select.wav'))
 
 
 platno.bind('<Motion>', pohybMysi)

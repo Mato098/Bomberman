@@ -1,4 +1,14 @@
 from tkinter import *
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 okno = Tk()
 okno.title('Multiplayer settings')
@@ -101,25 +111,25 @@ def start_game():  # writes settings into files, for the game to work with
 	c = player3, color3, controls3
 	d = player4, color4, controls4
 
-	file1 = open('multiplayer_settings/1.txt', 'w')
+	file1 = open(resource_path('multiplayer_settings/1.txt'), 'w')
 	for i in a:
 		file1.write(i.get())
 		file1.write('\n')
 	file1.close()
 
-	file2 = open('multiplayer_settings/2.txt', 'w')
+	file2 = open(resource_path('multiplayer_settings/2.txt'), 'w')
 	for i in b:
 		file2.write(i.get())
 		file2.write('\n')
 	file2.close()
 
-	file3 = open('multiplayer_settings/3.txt', 'w')
+	file3 = open(resource_path('multiplayer_settings/3.txt'), 'w')
 	for i in c:
 		file3.write(i.get())
 		file3.write('\n')
 	file3.close()
 
-	file4 = open('multiplayer_settings/4.txt', 'w')
+	file4 = open(resource_path('multiplayer_settings/4.txt'), 'w')
 	for i in d:
 		file4.write(i.get())
 		file4.write('\n')
