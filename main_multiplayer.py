@@ -1,6 +1,7 @@
 #! python3
 
 import copy
+import sys
 import tkinter, math, time, keyboard, random
 from dataclasses import dataclass, field
 import os
@@ -15,10 +16,10 @@ import aiLogic
 
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    #try:
+        #base_path = sys._MEIPASS
+    #except Exception:
+    base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
 
@@ -36,7 +37,7 @@ platno.grid(column=0, row=0)
 background = tkinter.PhotoImage(file=resource_path('other_textures/bg64.png'))
 crateImg = tkinter.PhotoImage(file=resource_path('other_textures/crate64.png'))
 
-subor = open('multiplayer_settings/mode.txt', 'r')
+subor = open(resource_path('multiplayer_settings/mode.txt'), 'r')
 for i in subor:
 	mode = i.strip()
 subor.close()
@@ -286,17 +287,6 @@ def createAi(name, color, order):
 	ai_stats.leaderboardOrder = order
 
 	return ai_stats
-
-
-
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
 
 
 def playerAnim(playerObj, playerStats):
@@ -1465,7 +1455,7 @@ strafecounter = 0  # player strafe movement TODO dat pohyb registrovanie atd. ak
 while gamestate == 'playing':
 
 	if keyboard.is_pressed('Escape'):
-		exit()
+		sys.exit()
 	checkBombs()
 
 	if time.time() - tExplosion > 0.1:

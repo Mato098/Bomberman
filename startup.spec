@@ -2,13 +2,11 @@
 
 block_cipher = None
 
-added_files = [('other_textures', 'other_textures'), ('sound', 'sound'), ('bomb_sprites', 'bomb_sprites'),
-('bomberman_sprites', 'bomberman_sprites'), ('explosion_sprites', 'explosion_sprites'), ('multiplayer_settings', 'multiplayer_settings')]
 
 a = Analysis(['startup.py'],
              pathex=['C:\\Users\\Martin\\PycharmProjects\\python veci\\Bomberman'],
              binaries=[],
-             datas=added_files,
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -32,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False , icon='icon.ico')

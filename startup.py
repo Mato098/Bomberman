@@ -1,16 +1,17 @@
 #! python3
 
 import tkinter, random
-import os
+import os, sys
 from pygame import mixer
+#from main_multiplayer import resource_path
 
 
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    #try:
+        #base_path = sys._MEIPASS
+    #except Exception:
+    base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
 
@@ -129,7 +130,7 @@ def click(event):
 		os.system('python "startup.py"')  # restart startup.py(else 'main' will not be imported again)
 
 	elif (240 < x < 720) and (490 < y < 540):  # quit
-		exit()
+		sys.exit()
 	elif (x < 100) and (y < 100):  # sound toggle
 		subor = open(resource_path('sound/settings.txt'), 'r')
 		for i in subor:
