@@ -1,13 +1,13 @@
 # Bomberman
 Made as a school project
 
-Packages required:
+run with `Bomberman.exe`
+
+Packages required(if launching `.py` files):
 `keyboard`
 `pygame`
 `dataclasses`
 `Pillow`
-
-start by running `startup.py`
 
 game runs on fixed resolution 1236 x 832
 
