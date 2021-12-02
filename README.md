@@ -1,5 +1,5 @@
 # Bomberman
-Made as a school project
+Made as a school project using Tkinter
 
 run with `Bomberman.exe`
 
