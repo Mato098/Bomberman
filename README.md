@@ -12,6 +12,7 @@ Packages required(if launching `.py` files):
 game runs on fixed resolution 1236 x 832
 
 
+!not an example of clean, efficient or acceptable coding practices
 
 
 ![snapshot](other_textures/sample.PNG)
